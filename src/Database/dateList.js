@@ -1,3 +1,45 @@
+var mysql = require('mysql');
+
+var con = mysql.createConnection({
+
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "finishit_db",
+    
+}
+);
+//var c = "2020-04-28 00:00:00";
+
+function redNotification()
+{
+var todate = new Date();
+var dat1 = todate.getDate();
+var month1 = todate.getMonth() + 1;
+var yyyy = todate.getFullYear();
+
+todate = yyyy+'-'+month1+'-'+dat1 +" 00:00:00";
+
+var sql ='select * from task INNER JOIN priority ON task.t_priority = priority.p_id where t_due_date = ' + mysql.escape(todate) + ' AND t_priority = 1'; 
+con.query(sql, function (err, result){
+    if(err)
+    {
+        return console.log(err);
+    }
+    if(result.length>0)
+    {
+        return true;
+    }
+    else
+    {
+        // Object.keys(result).forEach(function(key) {
+        //     var row = result[key];
+        //     console.log(row)
+        //   });
+        return false;
+    }
+});
+}
 
 
 function dayListing()
@@ -21,7 +63,7 @@ var d6 = today.getDate() + 6;
 var mm = today.getMonth()+1; 
 var yyyy = today.getFullYear();
 
-if((mm === 4) || (mm === 6) || (mm === 9) || (mm === 11))
+if((mm == 4) || (mm == 6) || (mm == 9) || (mm == 11))
 {
     if(d1>30)
     {
@@ -95,7 +137,4 @@ console.log(today3);
 console.log(today4);
 console.log(today5);
 console.log(today6);
-
-return [today, today1, today2, today3, today4,today5,today6];
 }
-
