@@ -15,6 +15,8 @@ import ListItem from './sidebarComponent/ListItem';
 import TagItem from './sidebarComponent/TagItem';
 import AddTagName from "./sidebarComponent/AddTagName";
 import AddListName from './sidebarComponent/AddListName';
+import tasks from "./tasks";
+import EditTask from "./mainContentComponent/EditTask";
 
 
 function App () {
@@ -27,7 +29,7 @@ function App () {
       main = 
       <>
         <SortButton />
-        <TaskItem />
+        <TaskItem/>
       </>
       break;
     case 'create':
@@ -41,6 +43,10 @@ function App () {
       break;
   }
 
+
+
+  
+
   // set Item array [] state; orgingal state for your reference. 
   const [listItems, setListItems] = useState(["...fsads","dhj","42389fd","hfghf","fseg","ajhgj","trhsef","sgdfg"]);
   //set tag array [] state;
@@ -53,6 +59,12 @@ function App () {
   function addTagItem(newTagItem){
     setTags([...tags, newTagItem]);
   }
+  // //set task item to EditTask component
+  // const [taskFields, setTask]= useState(["Buy Cake", "2-12-2020","HIGH"]);
+  // function showEditComponent(fields){
+  //   setTask(fields);
+  // }
+
 
   return (
     <>
@@ -73,12 +85,14 @@ function App () {
 
         {/* upcoming task section  */}
         <div className="upcoming">
-          <UpcomingTask setPage={setPage} className=""/>
+          <UpcomingTask setPage={setPage}/>
         </div>
 
         {/* list section */}
         <div className="list">
+          {/* below add a new list item into the existing list array */}
           <List addListItem={addListItem} />
+          {/* below is the add btn for a new list */}
           <AddListName />
           <div className="listSection">
             {listItems.map(item => <ListItem item={item} />)}
@@ -87,7 +101,7 @@ function App () {
         </div>
 
         {/* tag section */}
-        <div className="tag">
+        <div className="tag mt-3">
           <Tag addTagItem={addTagItem} />
           <AddTagName />
           <div className="tagSection">

@@ -10,12 +10,6 @@ function ListItem(props){
         <div className="mx-3">
             <Button size="sm" variant="outline-success" className="mt-1 mx-1">{props.item}</Button>
         </div>
-         
-
-        
     );
-  
 }
-
-
 export default ListItem;

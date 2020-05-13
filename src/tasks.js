@@ -8,7 +8,7 @@ const tasks = [
         t_user: "no one",
         t_priority:1,
         t_status: 1,
-        statut_descriptions: "chicken curry",
+        t_description: "chicken curry",
         t_start_date: "25-04-2020",
         t_due_date:"25-04-2020",
         t_rec_id:"it's a int:depedning on the foreign key",
@@ -22,7 +22,7 @@ const tasks = [
         t_user: "some one",
         t_priority:1,
         t_status: 1,
-        statut_descriptions: "salad",
+        t_description: "salad",
         t_start_date: "26-04-2020",
         t_due_date:"26-04-2020",
         t_rec_id:"it's a int:depedning on the foreign key",
@@ -89,4 +89,17 @@ const statusArr = [
     },
 ]
 
+
+        //key={tasks.t_id}
+        // taskName = {tasks.t_name}
+        // taskUser = {tasks.t_user}
+        // taskPriority = {tasks.t_priority}
+        // taskStatus = {tasks.t_status}
+        // taskDescription = {tasks.t_description}
+        // taskStartDate = {tasks.t_start_date}
+        // taskDueDate = {tasks.t_due_date}
+        // taskRecurringID ={tasks.t_rec_id}
+        // taskGroup = {tasks.t_group}
+        // taskCategory ={tasks.t_caregory}
+        // taskActive ={tasks.t_active}
 export default tasks;
