@@ -32,9 +32,11 @@ function TaskItem (props) {
 }
 
 function TaskItemList (props) {
+  console.log('tasks:', props.tasks);
+  console.log('map?', props.tasks.map);
   return (
     <div>
-      {props.tasks.map(task => <TaskItem key = {task.t_id} task={task} />)}
+      {props.tasks.map(task => <TaskItem task={task} />)}
     </div>
   );
 }
