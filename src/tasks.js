@@ -58,14 +58,14 @@ const tagsGroups = [
 
 const priorities = [
     {
-        p_id:1,
+        p_id:7,
         p_priority:"High"
     },
     {   
-        p_id:2,
+        p_id:8,
         p_priority:"MEDIUM",
 
-        p_id:3,
+        p_id:6,
         p_priority:"LOW"
     }
 ]
