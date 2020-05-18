@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import Select from 'react-select';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
@@ -30,6 +31,7 @@ function EditTask(props){
         {value:6,label:"LOW"}];
     
     const [selectedPriority, setSelectPriority] = useState(props.task.t_priority);
+    const [selecedStatus, setStatus] = useState(props.task.t_status);
     
     function getOptionValue (option) {
         console.log('get value for:', option);
@@ -48,46 +50,69 @@ function EditTask(props){
         setDescription(t_description);
     }
 
+    async function submitEdit(event){
+        event.preventDefault();
+
+        const body = new URLSearchParams(new FormData(event.target)).toString();
+        const result = await axios.put(
+            'http://localhost:8080/tasks/' + props.task.t_id,
+            body
+          );
+    
+          if (result.fatal) {
+            alert('request failed. please restart the server');
+            return;
+          }
+          console.log(result.data);
+        
+        
+        // fetch('/api/form-submit-url', {
+        //   method: 'PUT',
+        //   body: data,
+        // });
+
+    }
     return (
-        <Form className="my-1 col-8 border border-success rounded text-left" key={props.task.t_id}>
-        <Form.Group as={Row} controlId="taskNameID" className="mt-2">
+        <Form className="my-1 col-8 border border-success rounded text-left" key={props.task.t_id} onSubmit={submitEdit}>
+        <Form.Group as={Row} controlId="t_name" className="mt-2">
             <Form.Label column sm={3} >
             Task Name
             </Form.Label>
             <Col sm={9}>
-            <Form.Control as='input'  type="text" placeholder="task name" value={name} onChange={onChangeName}/>
+            <Form.Control as='input' name="t_name" type="text" placeholder="task name" value={name} onChange={onChangeName}/>
             </Col>
         </Form.Group>
-        <Form.Group as={Row}  controlId="priority">
+        <Form.Group as={Row}  controlId="t_priority">
             <Form.Label column sm={3}>
             Priority
             </Form.Label>
             <Col sm={9}>
                 {/* find the oject match the value === props t_td */}
-                <Select options={priorityOptions} defaultValue={priorityOptions.find(o => o.value === props.task.t_priority)} getOptionValue={getOptionValue} />
+                <Select options={priorityOptions} name="t_priority" defaultValue={priorityOptions.find(o => o.value === props.task.t_priority)} getOptionValue={getOptionValue} />
             </Col>
         </Form.Group>
-        <Form.Group as={Row}  controlId="taskStatus">
+        <Form.Group as={Row}  controlId="t_status">
             <Form.Label column sm={3} for>
             Status
             </Form.Label>
             <Col sm={9}>
-                <Select options={statusOptions} defaultValue={statusOptions.find(o => o.value === props.task.t_status)} getOptionValue={getOptionValue} />
+                <Select options={statusOptions} name="t_status" defaultValue={statusOptions.find(o => o.value === props.task.t_status)} getOptionValue={getOptionValue} />
             </Col>
         </Form.Group>
-        <Form.Group as={Row}  controlId="a">
-            <Form.Label column sm={3}>
+        <Form.Group as={Row} controlId="t_start_date">
+            <Form.Label column sm={3} >
             Start Date
             </Form.Label>
             <Col Col={9}>
                 <DatePicker  
                 selected={startDate}
+                name="t_start_date"
                 onChange={date => setStartDate(date)} />
             </Col>
             </Form.Group>
-            <Form.Group as={Row}  controlId="b">
+            <Form.Group as={Row} controlId="t_due_date" >
     
-            <Form.Label column sm={3}>
+            <Form.Label column sm={3} >
             Due Date
             </Form.Label>
             <Col Col={9}>
@@ -96,8 +121,8 @@ function EditTask(props){
                 onChange={date => setDueDate(date)} />
             </Col>
         </Form.Group>
-        <Form.Group as={Row}  controlId="c">
-            <Form.Label column sm={3}>
+        <Form.Group as={Row}  controlId="t_caregory">
+            <Form.Label column sm={3} >
             List/Category
             </Form.Label>
             <Col sm={9}>
@@ -107,7 +132,7 @@ function EditTask(props){
                 </Form.Control>
             </Col>
         </Form.Group>
-        <Form.Group as={Row}  controlId="d">
+        <Form.Group as={Row}  controlId="t_group">
             <Form.Label column sm={3}>
             Tag/Group
             </Form.Label>
@@ -119,10 +144,10 @@ function EditTask(props){
             </Col>
         </Form.Group>
 
-        <FormGroup as={Row}  controlId="e">
+        <FormGroup as={Row}  controlId="t_description">
             <Form.Label column sm={3}>Task Description</Form.Label>
             <Col sm={9}>
-            <Form.Control as="textarea" rows="3" placeholder="Add your description here..." value={description} onChange={onChangeDescription}/>  
+            <Form.Control as="textarea" rows="3" placeholder="Add your description here..." value={description} onChange={onChangeDescription} onChange={onChangeDescription}/>  
             </Col> 
         </FormGroup>
         <Form.Group as={Row}>

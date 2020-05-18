@@ -30,12 +30,18 @@ function App () {
       const result = await axios(
         'http://localhost:8080/tasks',
       );
+
+      if (result.fatal) {
+        alert('request failed. please restart the server');
+        return;
+      }
       setDateItems(result.data);
     };
  
     fetchData();
   }, []);
   
+
 
   
   //set the state for different component shown in main section.
