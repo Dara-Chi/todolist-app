@@ -1,27 +1,26 @@
 import React, { useState } from "react";
-import tasks from "../tasks";
+
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import EditTask from './EditTask';
-import Card from 'react-bootstrap/Card'
 
 function TaskItem (props) {
-  //if use click on the task btn, then show the edit component visible.
+  //if use click on the task btn, then show the edit component visible or vice versa.
   const[showEditComponent, setEditComponent]=useState(false);
   function clickEdit(){
     setEditComponent(!showEditComponent);
   }
+  console.log('TASK:', props.task);
 
   return (
     <>
-      <Button className="my-1 col-8" variant="outline-success" onClick={clickEdit} >
-        <Row key={props.task.t_id}>
-          <Col lg={8} className="text-left">{props.task.t_name}</Col>
-          <Col lg={2} className="text-left">{props.task.t_due_date}</Col>
-          <Col lg={2} className="text-left">{props.task.t_priority}</Col>
+      <Button key={props.t_id} className="my-1 col-8" variant="outline-success" onClick={clickEdit} >
+        <Row >
+          <Col lg={5} className="text-left">{props.task.t_name}</Col>
+          <Col lg={4} className="text-center">{props.task.t_due_date.substr(0,10)}</Col>
+          <Col lg={3} className="text-right">{props.task.t_priority}</Col>
         </Row>
-        
       </Button>
       <Row className="mx-0 px-0">
         <div className="my-1 col-2"></div>
@@ -32,10 +31,10 @@ function TaskItem (props) {
   );
 }
 
-function TaskItemList () {
+function TaskItemList (props) {
   return (
     <div>
-      {tasks.map(task => <TaskItem task={task} />)}
+      {props.tasks.map(task => <TaskItem key = {task.t_id} task={task} />)}
     </div>
   );
 }
