@@ -11,11 +11,11 @@ import CreateTask from "./mainContentComponent/CreateTask";
 import ExportList from "./mainContentComponent/ExportList";
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import ListItem from './sidebarComponent/ListItem';
-import TagItem from './sidebarComponent/TagItem';
+import TagItems from './sidebarComponent/TagItems';
 import AddTagName from "./sidebarComponent/AddTagName";
 import AddListName from './sidebarComponent/AddListName';
-import TaskItemList from "./mainContentComponent/TaskItem";
+import TaskItemList from "./mainContentComponent/TaskItemList";
+import ListItems from "./sidebarComponent/ListItems";
 
 
 function App () {
@@ -41,9 +41,41 @@ function App () {
     fetchData();
   }, []);
   
-
-
   
+  //fetch list items from databse
+  // set Item array [] state; orgingal state for your reference. 
+  const [listItems, setListItems] = useState([" "]);
+  useEffect(() => {
+    const fetchListItemData = async() => {
+      const result = await axios(
+        'http://localhost:8080/lists',
+      );
+      if (result.fatal) {
+        alert('request failed. please restart the server');
+        return;
+      }
+      setListItems(result.data);
+    };
+    fetchListItemData();
+  },[]);
+
+
+  //set tag array [] state;
+  const [tags, setTags] = useState([" "]);
+  useEffect(() => {
+    const fetchTagItemData = async() => {
+      const result = await axios(
+        'http://localhost:8080/tags',
+      );
+      if (result.fatal) {
+        alert('request failed. please restart the server');
+        return;
+      }
+      setTags(result.data);
+    };
+    fetchTagItemData();
+  },[]);
+
   //set the state for different component shown in main section.
   const [page, setPage] = useState('');
   let main;
@@ -66,10 +98,8 @@ function App () {
       break;
   }
 
-  // set Item array [] state; orgingal state for your reference. 
-  const [listItems, setListItems] = useState(["...fsads","dhj","42389fd","hfghf","fseg","ajhgj","trhsef","sgdfg"]);
-  //set tag array [] state;
-  const [tags, setTags] = useState(["...fsads","dhj","42389fd","hfghf","fseg","ajhgj","trhsef","sgdfg"]);
+  
+  
   //append new list item to old list items. 
   function addListItem(newListItem){
     setListItems([...listItems, newListItem]);
@@ -109,7 +139,7 @@ function App () {
           {/* below is the add btn for a new list */}
           <AddListName />
           <div className="listSection">
-            {listItems.map(item => <ListItem item={item} />)}
+            <ListItems listItems={listItems} />
           </div>
           
         </div>
@@ -119,7 +149,7 @@ function App () {
           <Tag addTagItem={addTagItem} />
           <AddTagName />
           <div className="tagSection">
-            {tags.map(tag => <TagItem tag={tag} />)}
+            <TagItems tagItems={tags} />
           </div>
           
         </div>
