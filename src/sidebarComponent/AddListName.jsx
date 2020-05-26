@@ -3,12 +3,27 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 
-function AddListName(){
+import { useState } from 'react';
+
+
+const [newListName, setListName] = useState("");
+function onChangeListName(e){
+    var newListName = e.target.value;
+    setListName(newListName);
+
+
+
+}
+
+
+function AddListName(props){
     return (
-            <InputGroup.Append className="my-1 mx-3">
-                <Form.Control type="text" placeholder="new list name..." inline/>
-                <Button variant="success" size="sm" className="mx-1">add</Button>
+        <Form className="mx-2" >
+            <InputGroup.Append className="my-1">
+            <Form.Control type="text" placeholder="new list name..." value={newListName} inline/>
+            <Button variant="success" size="sm" className="ml-1">add</Button>
             </InputGroup.Append>
+        </Form>
         );
     
     

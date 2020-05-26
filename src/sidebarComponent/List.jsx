@@ -6,7 +6,7 @@ function List(props) {
  
   return (
     <div className="mx-3 mt-3 row">
-         <h6>Your Lists</h6>
+         <h6>Your Lists/Categories</h6>
     </div> 
    
   );

@@ -63,7 +63,7 @@ function EditTask(props){
             alert('request failed. please restart the server');
             return;
           }
-          console.log(result.data);
+          props.updateTask(result.data);
         
         
         // fetch('/api/form-submit-url', {
