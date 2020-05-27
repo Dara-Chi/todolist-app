@@ -2,7 +2,7 @@ import React from "react";
 
 
 
-function List(props) {
+function List() {
  
   return (
     <div className="mx-3 mt-3 row">
