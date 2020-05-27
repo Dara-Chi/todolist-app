@@ -70,7 +70,19 @@ function App () {
     fetchListItemData();
   },[]);
 
-  //set tag array [] state;
+  //append new list item to old list items. 
+  async function addListItem(newListItem){
+    
+    console.log('creating new list item', newListItem);
+    let res = await axios.post( 'http://localhost:8080/createList', {c_name: newListItem})
+    .then((response) => {
+      setListItems([...listItems, response.data]);
+      console.log(response.data);
+    }, (error) => {
+      console.log(error);
+    });
+  }
+
   const [tags, setTags] = useState([" "]);
   useEffect(() => {
     const fetchTagItemData = async() => {
@@ -86,6 +98,19 @@ function App () {
     fetchTagItemData();
   },[]);
 
+  //append new tag item to old list items. 
+  async function addTagItem(newTagItem){
+    console.log('creating new list item', newTagItem);
+    let res = await axios.post( 'http://localhost:8080/CreateTag', {g_name: newTagItem})
+    .then((response) => {
+      setTags([...tags, response.data]);
+      console.log(response.data);
+    }, (error) => {
+      console.log(error);
+    });
+  }
+
+  
   //get how many "count" days.
   function getDays (count) {
     const today = new Date();
@@ -147,17 +172,7 @@ function App () {
       main = <></>
       break;
   }
-  
-  //append new list item to old list items. 
-  function addListItem(newListItem){
-    setListItems([...listItems, newListItem]);
-  }
-  //append new tag item to old list items. 
-  function addTagItem(newTagItem){
-    setTags([...tags, newTagItem]);
-  }
-  
- 
+
   return (
     <>
       {/* nav bar element in header */}
@@ -185,9 +200,9 @@ function App () {
         {/* list section */}
         <div className="list">
           {/* below add a new list item into the existing list array */}
-          <List addListItem={addListItem} />
+          <List />
           {/* below is the add btn for a new list */}
-          <AddListName />
+          <AddListName addListItem={addListItem}/>
           <div className="listSection">
             <ListItems listItems={listItems} />
           </div>
@@ -196,8 +211,8 @@ function App () {
 
         {/* tag section */}
         <div className="tag mt-3">
-          <Tag addTagItem={addTagItem} />
-          <AddTagName />
+          <Tag />
+          <AddTagName addTagItem={addTagItem}/>
           <div className="tagSection">
             <TagItems tagItems={tags} />
           </div>
