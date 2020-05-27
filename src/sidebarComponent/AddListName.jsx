@@ -15,12 +15,18 @@ import { useState } from 'react';
 
 // }
 
+const [listName, setListName] = useState("");
+
+function onSubmitListName(e){
+    var newList = e.target.value;
+    setListName(newList);
+}
 
 function AddListName(props){
     return (
-        <Form className="mx-2" >
-            <InputGroup.Append className="my-1">
-            <Form.Control type="text" placeholder="new list name..."  inline/>
+        <Form className="mx-2" onSubmit={onSubmitListName} >
+            <InputGroup.Append className="my-1" >
+            <Form.Control type="text" placeholder="new list name..." value={listName} inline/>
             <Button variant="success" size="sm" className="ml-1">add</Button>
             </InputGroup.Append>
         </Form>

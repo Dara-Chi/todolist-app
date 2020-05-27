@@ -17,16 +17,15 @@ function TaskItem (props) {
     <>
       <Button key={props.task.t_id} className="mb-1 col-8" variant="outline-success" onClick={clickEdit} >
         <Row >
-          <Col lg={5} className="text-left">{props.task.t_name}</Col>
-          <Col lg={4} className="text-center">{props.task.t_due_date.substr(0,10)}</Col>
-          <Col lg={3} className="text-right">{props.task.t_priority}</Col>
+          <Col sm={5} className="text-left">{props.task.t_name}</Col>
+          <Col sm={4} className="text-center">{new Date(props.task.t_due_date).toLocaleDateString()}</Col>
+          <Col sm={3} className="text-right">{props.task.t_priority}</Col>
         </Row>
       </Button>
       <Row className="mx-0 px-0">
         <div className="my-1 col-2"></div>
         {showEditComponent && <EditTask task={props.task} updateTask={props.updateTask} />}
         </Row>
-      
     </>
   );
 }
