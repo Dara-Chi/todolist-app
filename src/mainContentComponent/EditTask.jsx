@@ -10,15 +10,10 @@ import Button from "react-bootstrap/Button";
 import FormGroup from "react-bootstrap/FormGroup";
 import { useState } from 'react';
 
-
-
-
-
-
 function EditTask(props){
     
-    const [startDate, setStartDate]= useState(new Date(props.task.t_start_date.substr(0, 10)));
-    const [dueDate, setDueDate] = useState(new Date(props.task.t_due_date.substr(0,10)));
+    const [startDate, setStartDate]= useState(new Date(props.task.t_start_date));
+    const [dueDate, setDueDate] = useState(new Date(props.task.t_due_date));
     const statusOptions = [
         {value:1,label:"TO START"},
         {value:2,label:"ONGOING" },
