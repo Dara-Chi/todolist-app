@@ -25,11 +25,7 @@ function App () {
   //fetch data when the component mounts.Providing an empty array as second argument... 
   //to the effect hook to avoid activating it on component updates but only for the mounting of the component.
   const [dateItems, setDateItems] = useState([]);
-
-  
-
   useEffect(() => {
-    
     const fetchData = async () => {
       const result = await axios(
         'http://localhost:8080/tasks', 
@@ -45,9 +41,9 @@ function App () {
     fetchData();
   }, []);
 
-  function addTask (newTask) {
-    setDateItems([...dateItems, newTask]);
-  }
+  // function addTask (newTask) {
+  //   setDateItems([...dateItems, newTask]);
+  // }
 
   function updateTask (updatedTask) {
     setDateItems(dateItems.map(task => task.t_id === updatedTask.t_id ? updatedTask : task));
@@ -110,12 +106,17 @@ function App () {
     });
   }
 
-  
+  function getDay (date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
   //get how many "count" days.
   function getDays (count) {
     const today = new Date();
     return Array.from(new Array(count), (_, i) => {
-      return new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+      const day = getDay(today);
+      day.setDate(day.getDate() + i);
+      return day;
     });
   }
 
@@ -130,7 +131,7 @@ function App () {
   const [currentDay, setCurrentDay] = useState(fiveDays[0]);
 
   function filterTasksByDay (task) {
-    const taskDueDate = new Date(task.t_due_date);
+    const taskDueDate = getDay(new Date(task.t_due_date)); // time
     return taskDueDate.valueOf() === currentDay.valueOf();
   }
 
@@ -151,6 +152,39 @@ function App () {
     return taskStatus === filterStatus;
   }
 
+  async function createTaskPost(newTask){
+
+    console.log('creating new task item', newTask);
+    let res = await axios.post( 'http://localhost:8080/CreateTask', newTask)
+    .then((response) => {
+      setListItems([...listItems, response.data]);
+      console.log(response.data);
+    }, (error) => {
+      console.log(error);
+    });
+
+  }
+
+  const[taskId, setTaskId]=useState("");
+  async function onSubmitEdit(editedTask){
+
+    console.log('edited task: ', editedTask);
+    var t_id = editedTask.t_id;
+    try {
+      const res = await axios.put('http://localhost:8080/tasks/'+ t_id, editedTask);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+/*
+    return axios.put('http://localhost:8080/tasks' + editedTask.t_id, editedTask).then((res) => {
+      console.log(res.data);
+    }).catch (error => {
+      console.log(error);
+    })
+    */
+  }
+
   //set the state for different component shown in main section.
   const [page, setPage] = useState('');
   let main;
@@ -159,11 +193,12 @@ function App () {
       main = 
       <>
         <SortButton filters={filters} filterStatus={filterStatus} setStatus={setStatus} />
-        <TaskItemList tasks={dateItems.filter(filterTasksByDay).filter(filterTaskByStatus)} updateTask={updateTask} />          
+        <TaskItemList tasks={dateItems.filter(filterTasksByDay).filter(filterTaskByStatus)} updateTask={updateTask} 
+                      listItems={listItems} tagItems={tags} onSubmitEdit={onSubmitEdit}/>          
       </>
       break;
     case 'create':
-      main = <CreateTask />
+      main = <CreateTask createTaskPost={createTaskPost} listItems={listItems} tagItems={tags}/>
       break;
     case 'export':
       main = <ExportList />
