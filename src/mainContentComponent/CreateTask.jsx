@@ -12,8 +12,7 @@ import moment from 'moment';
 
 
 function CreateTask(props) {
-    const [newTask, setNewTask] = useState({});
-
+   
     const [selectedStartDate, setStartDate]=useState(new Date());
     const [selectedDueDate, setDueDate]= useState(selectedStartDate);
     
@@ -45,8 +44,6 @@ function CreateTask(props) {
     
     }
 
-   
-
     return (
     <Form className="my-1 col-md-8  border border-success rounded text-left mx-auto mt-5" onSubmit={onSubmitCreateTask}>
     <Form.Group as={Row} controlId="t_name" className="mt-3">
@@ -54,7 +51,7 @@ function CreateTask(props) {
         Task Name
         </Form.Label>
         <Col sm={9} >
-            <Form.Control as='input' name="t_name" type="text" ref={name => task.t_name = name} placeholder="Give a task name" />
+            <Form.Control as='input' name="t_name" type="text" ref={name => task.t_name = name} placeholder="Give a task name..." />
         </Col>
     </Form.Group>
     <Form.Group as={Row}  controlId="t_priority">
@@ -64,9 +61,9 @@ function CreateTask(props) {
         <Col sm={9}>
             {/* find the object match the value === props t_td */}
             <Form.Control as="select" name="t_priority" ref={priority => task.t_priority = priority} custom>
-                <option value="6">Low</option>
-                <option value="8">Medium</option>
-                <option value="7">High</option>
+                <option value="1">Low</option>
+                <option value="2">Medium</option>
+                <option value="3">High</option>
             </Form.Control>
         </Col>
     </Form.Group>
@@ -93,7 +90,7 @@ function CreateTask(props) {
                 name="t_start_date" 
                 selected={selectedStartDate}
                 onChange={date => setStartDate(date)} 
-                minDate={selectedStartDate}
+                minDate={new Date()}
             />
         </Col>
         </Form.Group>
@@ -104,7 +101,6 @@ function CreateTask(props) {
         </Form.Label>
         <Col Col={9}>
         <DatePicker 
-           
             name="t_due_date"
             selected={selectedDueDate}
             onChange={date => setDueDate(date)}
@@ -134,7 +130,7 @@ function CreateTask(props) {
         </Col>
     </Form.Group>
 
-    <Form.Group as={Row}  controlId="tc_recurring">
+    <Form.Group as={Row} controlId="tc_recurring">
         <Col sm={{ span: 6, offset: 3 }}>
             <Form.Check type="checkbox" label="Is it a recurring task?" name="tc_recurring" onChange={()=>showRecurringTask()}/>
 
@@ -158,7 +154,7 @@ function CreateTask(props) {
         <Form.Group as={Row}  controlId="tc_times">
             <Form.Label column sm={3}>repeated times</Form.Label>
             <Col sm={9}>
-            <Form.Control as="input" rows="3"  ref={times => task.tc_times = times} placeholder="give a number here..." />  
+            <Form.Control as="input" rows="3"  ref={times => task.tc_times = times} placeholder="Give a number here..." />  
             </Col> 
         </Form.Group>
            

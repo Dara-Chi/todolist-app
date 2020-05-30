@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import axios from 'axios';
 import Select from 'react-select';
 import Form from 'react-bootstrap/Form';
@@ -12,27 +13,13 @@ import { useState } from 'react';
 
 function EditTask(props){
     
-    const [startDate, setStartDate]= useState(new Date(props.task.t_start_date));
-    const [dueDate, setDueDate] = useState(new Date(props.task.t_due_date));
-    const statusOptions = [
-        {value:1,label:"TO START"},
-        {value:2,label:"ONGOING" },
-        {value:3,label:"DONE"},
-        {value:4,label:"OVERDUE"}];
+    const [selectedStartDate, setStartDate]= useState(new Date(props.task.t_start_date));
+    const [selectedDueDate, setDueDate] = useState(new Date(props.task.t_due_date));
 
-    const priorityOptions =[
-        {value:7,label:"HIGH"},
-        {value:8,label:"MEDIUM" },
-        {value:6,label:"LOW"}];
-    
+   
     const [selectedPriority, setSelectPriority] = useState(props.task.t_priority);
     const [selecedStatus, setStatus] = useState(props.task.t_status);
     
-    function getOptionValue (option) {
-        console.log('get value for:', option);
-        return option.value || option;
-    }
-
     const[name, setName] = useState(props.task.t_name);
     function onChangeName(e){
         var t_name = e.target.value;
@@ -45,36 +32,32 @@ function EditTask(props){
         setDescription(t_description);
     }
 
-    async function submitEdit(event){
-        event.preventDefault();
-
-        const body = new URLSearchParams(new FormData(event.target)).toString();
-        const result = await axios.put(
-            'http://localhost:8080/tasks/' + props.task.t_id,
-            body
-          );
+    const task = {};
+    function onSubmitEditTask (e) {
+        e.preventDefault();
+        console.log('event?', e);
+        var data = {
+            t_id:props.task.t_id,
+            t_name: name,
+            t_priority: task.t_priority.value,
+            t_status: task.t_status.value,
+            t_start_date: moment(selectedStartDate).format('YYYY-MM-DD'),
+            t_due_date: moment(selectedDueDate).format('YYYY-MM-DD'),
+            t_category: task.t_category.value,
+            t_group: task.t_group.value,
+            t_description: description,
+        }
+        props.onSubmitEdit(data);
     
-          if (result.fatal) {
-            alert('request failed. please restart the server');
-            return;
-          }
-          props.updateTask(result.data);
-        
-        
-        // fetch('/api/form-submit-url', {
-        //   method: 'PUT',
-        //   body: data,
-        // });
-
     }
     return (
-        <Form className="my-1 col-8 border border-success rounded text-left" key={props.task.t_id} onSubmit={submitEdit}>
+        <Form className="my-1 col-8 border border-success rounded text-left" key={props.task.t_id} onSubmit={onSubmitEditTask}>
         <Form.Group as={Row} controlId="t_name" className="mt-2">
             <Form.Label column sm={3} >
             Task Name
             </Form.Label>
             <Col sm={9}>
-            <Form.Control as='input' name="t_name" type="text" placeholder="task name" value={name} onChange={onChangeName}/>
+                <Form.Control as='input' name="t_name" type="text" placeholder="task name" value={name} onChange={onChangeName}/>
             </Col>
         </Form.Group>
         <Form.Group as={Row}  controlId="t_priority">
@@ -82,17 +65,27 @@ function EditTask(props){
             Priority
             </Form.Label>
             <Col sm={9}>
-                {/* find the oject match the value === props t_td */}
-                <Select options={priorityOptions} name="t_priority" defaultValue={priorityOptions.find(o => o.value === props.task.t_priority)} getOptionValue={getOptionValue} />
+            <Form.Control as="select" name="t_priority" defaultValue={selectedPriority} ref={priority => task.t_priority = priority} custom>
+                <option value="1">Low</option>
+                <option value="2">Medium</option>
+                <option value="3">High</option>
+            </Form.Control>
             </Col>
+           
         </Form.Group>
         <Form.Group as={Row}  controlId="t_status">
             <Form.Label column sm={3} for>
             Status
             </Form.Label>
             <Col sm={9}>
-                <Select options={statusOptions} name="t_status" defaultValue={statusOptions.find(o => o.value === props.task.t_status)} getOptionValue={getOptionValue} />
-            </Col>
+            <Form.Control as="select" name="t_status" defaultValue={selecedStatus} ref={status => task.t_status = status}  custom>
+                <option value="1">To Start</option>
+                <option value="2">Ongoing</option>
+                <option value="3">Done</option>
+                <option value="4">Overdue</option>
+            </Form.Control>
+            </Col>    
+            
         </Form.Group>
         <Form.Group as={Row} controlId="t_start_date">
             <Form.Label column sm={3} >
@@ -100,7 +93,7 @@ function EditTask(props){
             </Form.Label>
             <Col Col={9}>
                 <DatePicker  
-                selected={startDate}
+                selected={selectedStartDate}
                 name="t_start_date"
                 onChange={date => setStartDate(date)} />
             </Col>
@@ -112,7 +105,7 @@ function EditTask(props){
             </Form.Label>
             <Col Col={9}>
             <DatePicker
-                selected={dueDate}
+                selected={selectedDueDate}
                 onChange={date => setDueDate(date)} />
             </Col>
         </Form.Group>
@@ -121,9 +114,8 @@ function EditTask(props){
             List/Category
             </Form.Label>
             <Col sm={9}>
-                <Form.Control as="select" custom>
-                    <option selected>Select a list</option>
-                    <option selected>I don't know</option>
+                <Form.Control as="select" name="t_category" defaultValue={props.task.t_category} ref={list => task.t_category = list}  custom>
+                    {props.listItems.map(i => <option key={i.c_id} value={i.c_id}>{i.c_name}</option>)}
                 </Form.Control>
             </Col>
         </Form.Group>
@@ -132,13 +124,11 @@ function EditTask(props){
             Tag/Group
             </Form.Label>
             <Col sm={9}>
-            <Form.Control as="select" custom>
-                <option selected>select a tag</option>
-                <option value="1">I don't know</option>
+            <Form.Control as="select" name="t_group" custom defaultValue={props.task.t_group} ref={tag => task.t_group = tag}>
+                {props.tagItems.map(i => <option key={i.g_id} value ={i.g_id}>{i.g_name}</option>)}
             </Form.Control>
             </Col>
         </Form.Group>
-
         <FormGroup as={Row}  controlId="t_description">
             <Form.Label column sm={3}>Task Description</Form.Label>
             <Col sm={9}>

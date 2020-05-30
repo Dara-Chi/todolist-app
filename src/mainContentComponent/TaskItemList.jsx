@@ -24,7 +24,8 @@ function TaskItem (props) {
       </Button>
       <Row className="mx-0 px-0">
         <div className="my-1 col-2"></div>
-        {showEditComponent && <EditTask task={props.task} updateTask={props.updateTask} />}
+        {showEditComponent && <EditTask task={props.task} updateTask={props.updateTask} 
+                                  listItems={props.listItems} tagItems={props.tagItems} onSubmitEdit={props.onSubmitEdit}/>}
         </Row>
     </>
   );
@@ -35,7 +36,7 @@ function TaskItemList (props) {
   console.log('map?', props.tasks.map);
   return (
     <div>
-      {props.tasks.map(task => <TaskItem task={task} />)}
+      {props.tasks.map(task => <TaskItem task={task} listItems={props.listItems} tagItems={props.tagItems} onSubmitEdit={props.onSubmitEdit}/>)}
     </div>
   );
 }

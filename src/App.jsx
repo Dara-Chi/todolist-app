@@ -25,11 +25,7 @@ function App () {
   //fetch data when the component mounts.Providing an empty array as second argument... 
   //to the effect hook to avoid activating it on component updates but only for the mounting of the component.
   const [dateItems, setDateItems] = useState([]);
-
-  
-
   useEffect(() => {
-    
     const fetchData = async () => {
       const result = await axios(
         'http://localhost:8080/tasks', 
@@ -45,9 +41,9 @@ function App () {
     fetchData();
   }, []);
 
-  function addTask (newTask) {
-    setDateItems([...dateItems, newTask]);
-  }
+  // function addTask (newTask) {
+  //   setDateItems([...dateItems, newTask]);
+  // }
 
   function updateTask (updatedTask) {
     setDateItems(dateItems.map(task => task.t_id === updatedTask.t_id ? updatedTask : task));
@@ -169,7 +165,25 @@ function App () {
 
   }
 
+  const[taskId, setTaskId]=useState("");
+  async function onSubmitEdit(editedTask){
 
+    console.log('edited task: ', editedTask);
+    var t_id = editedTask.t_id;
+    try {
+      const res = await axios.put('http://localhost:8080/tasks/'+ t_id, editedTask);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+/*
+    return axios.put('http://localhost:8080/tasks' + editedTask.t_id, editedTask).then((res) => {
+      console.log(res.data);
+    }).catch (error => {
+      console.log(error);
+    })
+    */
+  }
 
   //set the state for different component shown in main section.
   const [page, setPage] = useState('');
@@ -179,7 +193,8 @@ function App () {
       main = 
       <>
         <SortButton filters={filters} filterStatus={filterStatus} setStatus={setStatus} />
-        <TaskItemList tasks={dateItems.filter(filterTasksByDay).filter(filterTaskByStatus)} updateTask={updateTask} />          
+        <TaskItemList tasks={dateItems.filter(filterTasksByDay).filter(filterTaskByStatus)} updateTask={updateTask} 
+                      listItems={listItems} tagItems={tags} onSubmitEdit={onSubmitEdit}/>          
       </>
       break;
     case 'create':
