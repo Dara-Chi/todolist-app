@@ -14,11 +14,14 @@ function AddListName(props){
         setListName(newList);
     }
     return (
-        <Form className="mx-2" onSubmit={()=> props.addListItem(newListName)}>
-            <InputGroup.Append className="my-1" >
-            <Form.Control type="text" placeholder="new list name..."  onChange={onChangeListName} inline/>
-            <Button variant="success" size="sm" className="ml-1" type="submit" >add</Button>
-            </InputGroup.Append>
+
+        <Form className="mx-3" onSubmit={()=> props.addListItem(newListName)}>
+            <InputGroup>
+                <Form.Control type="text" placeholder="new list name..."  onChange={onChangeListName}/>
+                <InputGroup.Append>
+                    <Button variant="success" size="sm" className="ml-1" type="submit" >add</Button>
+                </InputGroup.Append>
+            </InputGroup>
         </Form>
         );
  

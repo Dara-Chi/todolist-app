@@ -2,13 +2,25 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 
 
 
 function ListItem(props){
     return (
-        <div className="mx-3 mb-1">
-            <Button key={props.listItem.c_id} size="sm" variant="outline-success" block className="mt-1 mx-1">{props.listItem.c_name}</Button>
+        <div className="mx-0 my-1">
+          <Form className="mx-3">
+            <InputGroup>
+              <Form.Control key={props.listItem.c_id} value= {props.listItem.c_name} onClick/>
+              <InputGroup.Append>
+                
+                <Button variant="outline-success" size="sm" type="submit"><span>&#10004;</span></Button>
+                <Button variant="outline-danger" size="sm"type="button"><span>	&#10008;</span></Button>
+
+              </InputGroup.Append>
+            </InputGroup>
+          </Form>
+          
         </div>
        
     );

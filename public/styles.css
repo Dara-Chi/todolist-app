@@ -52,6 +52,7 @@ body,
   grid-area: upcoming;
 }
 
+
 .list { 
   grid-area: list;
 }

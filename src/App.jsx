@@ -165,7 +165,7 @@ function App () {
 
   }
 
-  const[taskId, setTaskId]=useState("");
+ 
   async function onSubmitEdit(editedTask){
 
     console.log('edited task: ', editedTask);
@@ -185,6 +185,15 @@ function App () {
     */
   }
 
+  async function onClickDeleteTask(deletedTask){
+    console.log('deleted task: ', deletedTask);
+    try{
+      const res = await axios.put('http://localhost:8080/deleteTasks/'+ deletedTask.t_id, deletedTask);
+      console.log(res.data);
+    }catch(err){
+      console.log(err);
+    }
+ }
   //set the state for different component shown in main section.
   const [page, setPage] = useState('');
   let main;
@@ -194,7 +203,7 @@ function App () {
       <>
         <SortButton filters={filters} filterStatus={filterStatus} setStatus={setStatus} />
         <TaskItemList tasks={dateItems.filter(filterTasksByDay).filter(filterTaskByStatus)} updateTask={updateTask} 
-                      listItems={listItems} tagItems={tags} onSubmitEdit={onSubmitEdit}/>          
+                      listItems={listItems} tagItems={tags} onSubmitEdit={onSubmitEdit} onClickDeleteTask={onClickDeleteTask}/>          
       </>
       break;
     case 'create':
@@ -245,7 +254,7 @@ function App () {
         </div>
 
         {/* tag section */}
-        <div className="tag mt-3">
+        <div className="tag">
           <Tag />
           <AddTagName addTagItem={addTagItem}/>
           <div className="tagSection">
