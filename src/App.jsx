@@ -110,12 +110,17 @@ function App () {
     });
   }
 
-  
+  function getDay (date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
   //get how many "count" days.
   function getDays (count) {
     const today = new Date();
     return Array.from(new Array(count), (_, i) => {
-      return new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+      const day = getDay(today);
+      day.setDate(day.getDate() + i);
+      return day;
     });
   }
 
@@ -130,7 +135,7 @@ function App () {
   const [currentDay, setCurrentDay] = useState(fiveDays[0]);
 
   function filterTasksByDay (task) {
-    const taskDueDate = new Date(task.t_due_date);
+    const taskDueDate = getDay(new Date(task.t_due_date)); // time
     return taskDueDate.valueOf() === currentDay.valueOf();
   }
 
@@ -151,6 +156,21 @@ function App () {
     return taskStatus === filterStatus;
   }
 
+  async function createTaskPost(newTask){
+
+    console.log('creating new task item', newTask);
+    let res = await axios.post( 'http://localhost:8080/CreateTask', newTask)
+    .then((response) => {
+      setListItems([...listItems, response.data]);
+      console.log(response.data);
+    }, (error) => {
+      console.log(error);
+    });
+
+  }
+
+
+
   //set the state for different component shown in main section.
   const [page, setPage] = useState('');
   let main;
@@ -163,7 +183,7 @@ function App () {
       </>
       break;
     case 'create':
-      main = <CreateTask />
+      main = <CreateTask createTaskPost={createTaskPost} listItems={listItems} tagItems={tags}/>
       break;
     case 'export':
       main = <ExportList />
