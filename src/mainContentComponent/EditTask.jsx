@@ -45,13 +45,14 @@ function EditTask(props){
             t_due_date: moment(selectedDueDate).format('YYYY-MM-DD'),
             t_category: task.t_category.value,
             t_group: task.t_group.value,
-            t_description: description,
+            t_description: description
         }
         props.onSubmitEdit(data);
+        props.updateTask(data);
     
     }
     return (
-        <Form className="my-1 col-8 border border-success rounded text-left" key={props.task.t_id} onSubmit={onSubmitEditTask}>
+        <Form className="my-1 col-8 border border-success rounded text-left" key={props.task.t_id} onSubmit={onSubmitEditTask} updateTask={props.updateTask}>
         <Form.Group as={Row} controlId="t_name" className="mt-2">
             <Form.Label column sm={3} >
             Task Name

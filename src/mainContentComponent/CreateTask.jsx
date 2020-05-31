@@ -41,6 +41,7 @@ function CreateTask(props) {
            
         }
         props.createTaskPost(data);
+        props.updateTask(data);
     
     }
 

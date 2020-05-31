@@ -20,6 +20,7 @@ function TaskItem (props) {
       t_id:props.task.t_id,
   }
   props.onClickDeleteTask(data);
+  props.updateTask(data);
   }
   return (
     <>
@@ -32,9 +33,9 @@ function TaskItem (props) {
             <Col sm={3} className="text-right">{props.task.t_priority}</Col>
           </Row>
         </Button>
-        <Button variant="success" className="col-1" onClick={onClickDelete} >
+        <Button variant="success" className="col-1" onClick={onClickDelete} updateTask={props.updateTask}>
           <Col sm={2}>
-           <span >x</span>
+           <span >&#10008;</span>
           </Col>
         </Button>
       </ButtonGroup>
@@ -52,7 +53,7 @@ function TaskItemList (props) {
   console.log('map?', props.tasks.map);
   return (
     <div>
-      {props.tasks.map(task => <TaskItem task={task} listItems={props.listItems} tagItems={props.tagItems} 
+      {props.tasks.map(task => <TaskItem task={task} listItems={props.listItems} tagItems={props.tagItems} updateTask={props.updateTask} 
                                          onSubmitEdit={props.onSubmitEdit} onClickDeleteTask={props.onClickDeleteTask}/>)}
     </div>
   );

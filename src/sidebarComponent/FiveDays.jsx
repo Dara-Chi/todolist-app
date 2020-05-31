@@ -7,8 +7,8 @@ import Button from "react-bootstrap/Button";
 function EachDate(props){
    
     return (
-        <div className="mx-3 mb-1">
-            <Button id={props.eachDay}size="sm" variant="outline-success" block className="mt-1 mx-1" onClick={() => props.setCurrentDay(props.eachDay)}>{props.eachDay.toLocaleDateString()}</Button>
+        <div className="mb-1">
+            <Button id={props.eachDay}size="sm" variant="outline-success" block className="mx-1" onClick={() => props.setCurrentDay(props.eachDay)}>{props.eachDay.toLocaleDateString()}</Button>
         </div> 
     );
 }
@@ -16,7 +16,7 @@ function EachDate(props){
 function FiveDays(props){
 
     return (
-        <div>
+        <div className="mx-3">
             {props.fiveDays.map(eachDay => <EachDate eachDay={eachDay} setCurrentDay={props.setCurrentDay} />)}
         </div>
     );

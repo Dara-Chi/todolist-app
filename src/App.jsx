@@ -79,6 +79,9 @@ function App () {
     });
   }
 
+  function updateListItems(updatedList){
+    setListItems(listItems.map(listItem => listItem.c_id === updatedList.c_id ?updatedList:listItem));
+  }
   const [tags, setTags] = useState([" "]);
   useEffect(() => {
     const fetchTagItemData = async() => {
@@ -106,6 +109,21 @@ function App () {
     });
   }
 
+  function updateTag(updatedTag){
+    setTags(tags.map(tagItem => tagItem.g_id===updatedTag.g_id? updatedTag:tagItem));
+  }
+
+  async function onSubmitEditTag(editedTag){
+    console.log('edited tag: ', editedTag);
+    var g_id = editedTag.g_id;
+    try {
+      const res = await axios.put('http://localhost:8080/UpdateTag/'+ g_id, editedTag);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
   function getDay (date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   }
@@ -167,7 +185,6 @@ function App () {
 
  
   async function onSubmitEdit(editedTask){
-
     console.log('edited task: ', editedTask);
     var t_id = editedTask.t_id;
     try {
@@ -176,6 +193,8 @@ function App () {
     } catch (error) {
       console.log(error);
     }
+  }
+
 /*
     return axios.put('http://localhost:8080/tasks' + editedTask.t_id, editedTask).then((res) => {
       console.log(res.data);
@@ -183,6 +202,19 @@ function App () {
       console.log(error);
     })
     */
+  
+
+  async function onSubmitEditListItem(editedList){
+
+    console.log('edited list: ', editedList);
+    var c_id = editedList.c_id;
+    try {
+      const res = await axios.put('http://localhost:8080/updateList/'+ c_id, editedList);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+
   }
 
   async function onClickDeleteTask(deletedTask){
@@ -193,7 +225,7 @@ function App () {
     }catch(err){
       console.log(err);
     }
- }
+  }
   //set the state for different component shown in main section.
   const [page, setPage] = useState('');
   let main;
@@ -246,9 +278,10 @@ function App () {
           {/* below add a new list item into the existing list array */}
           <List />
           {/* below is the add btn for a new list */}
-          <AddListName addListItem={addListItem}/>
+          <AddListName addListItem={addListItem} />
           <div className="listSection">
-            <ListItems listItems={listItems} />
+            <ListItems listItems={listItems} updateListItems={updateListItems} 
+                        onSubmitEditListItem={onSubmitEditListItem}/>
           </div>
           
         </div>
@@ -258,7 +291,7 @@ function App () {
           <Tag />
           <AddTagName addTagItem={addTagItem}/>
           <div className="tagSection">
-            <TagItems tagItems={tags} />
+            <TagItems tagItems={tags}  updateTag={updateTag} onSubmitEditTag={onSubmitEditTag} />
           </div>
           
         </div>
