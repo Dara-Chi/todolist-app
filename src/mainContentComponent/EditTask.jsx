@@ -67,9 +67,9 @@ function EditTask(props){
             </Form.Label>
             <Col sm={9}>
             <Form.Control as="select" name="t_priority" defaultValue={selectedPriority} ref={priority => task.t_priority = priority} custom>
-                <option value="1">Low</option>
+                <option value="3">Low</option>
                 <option value="2">Medium</option>
-                <option value="3">High</option>
+                <option value="1">High</option>
             </Form.Control>
             </Col>
            

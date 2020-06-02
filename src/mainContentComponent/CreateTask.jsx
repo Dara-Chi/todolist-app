@@ -27,6 +27,7 @@ function CreateTask(props) {
         e.preventDefault();
         console.log('event?', e);
         var data = {
+            
             t_name: task.t_name.value,
             t_priority: task.t_priority.value,
             t_status: task.t_status.value,
@@ -62,9 +63,9 @@ function CreateTask(props) {
         <Col sm={9}>
             {/* find the object match the value === props t_td */}
             <Form.Control as="select" name="t_priority" ref={priority => task.t_priority = priority} custom>
-                <option value="1">Low</option>
+                <option value="3">Low</option>
                 <option value="2">Medium</option>
-                <option value="3">High</option>
+                <option value="1">High</option>
             </Form.Control>
         </Col>
     </Form.Group>

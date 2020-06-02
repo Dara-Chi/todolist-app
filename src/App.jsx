@@ -123,7 +123,7 @@ function App () {
       console.log(error);
     }
   }
-  
+
   function getDay (date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   }
@@ -239,7 +239,7 @@ function App () {
       </>
       break;
     case 'create':
-      main = <CreateTask createTaskPost={createTaskPost} listItems={listItems} tagItems={tags}/>
+      main = <CreateTask createTaskPost={createTaskPost} updateTask={updateTask}listItems={listItems} tagItems={tags}/>
       break;
     case 'export':
       main = <ExportList />
