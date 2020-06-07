@@ -24,10 +24,7 @@ function CreateTask(props) {
 
     const task = {};
     function onSubmitCreateTask (e) {
-        e.preventDefault();
-        console.log('event?', e);
         var data = {
-            
             t_name: task.t_name.value,
             t_priority: task.t_priority.value,
             t_status: task.t_status.value,
@@ -39,11 +36,10 @@ function CreateTask(props) {
             tc_frequency: task.tc_frequency ? task.tc_frequency.value : null,
             tc_times: task.tc_times ? task.tc_times.value : 1,
             t_description: task.t_description.value,
-           
         }
         props.createTaskPost(data);
         props.updateTask(data);
-    
+     
     }
 
     return (

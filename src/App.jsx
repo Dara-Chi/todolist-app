@@ -47,6 +47,7 @@ function App () {
 
   function updateTask (updatedTask) {
     setDateItems(dateItems.map(task => task.t_id === updatedTask.t_id ? updatedTask : task));
+    window.location.reload(true);
   }
  
   //fetch list items from database
@@ -145,9 +146,7 @@ function App () {
   //set five days for Upcoming task
   const [fiveDays, setFiveDays] = useState(dayListing());
 
-  console.log('five days?', fiveDays[0], fiveDays);
   const [currentDay, setCurrentDay] = useState(fiveDays[0]);
-
   function filterTasksByDay (task) {
     const taskDueDate = getDay(new Date(task.t_due_date)); // time
     return taskDueDate.valueOf() === currentDay.valueOf();
@@ -170,6 +169,7 @@ function App () {
     return taskStatus === filterStatus;
   }
 
+  
   async function createTaskPost(newTask){
 
     console.log('creating new task item', newTask);
@@ -247,6 +247,11 @@ function App () {
     case 'search':
       main = <></>
       break;
+  }
+
+  function checkToStartTaskOnSameDay (task) {
+    console.log(task);
+    if (task.t_status !== 1) return false; // not "to start"
   }
 
   return (
