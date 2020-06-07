@@ -38,7 +38,7 @@ function CreateTask(props) {
             t_description: task.t_description.value,
         }
         props.createTaskPost(data);
-        props.updateTask(data);
+        props.addTask(data);
      
     }
 

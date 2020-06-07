@@ -25,16 +25,23 @@ function ListItem(props){
       }
       props.onSubmitEditListItem(data);
       props.updateListItems(data);
-    
-  
+  }
+
+  function onDeleteList(e){
+    var data = {
+      c_id:props.listItem.c_id,
+      c_name: listName
+    }
+    props.onDeleteListItem(data);
+    props.deleteList(data);
   }
     return (
-          <Form className="mx-3 my-1" key={props.listItem.c_id} >
+          <Form className="mx-3 my-1">
             <InputGroup>
-              <Form.Control as='input' name="c_name" type="text" key={props.listItem.c_id} value={listName} onChange={onChangeList}/>
+              <Form.Control as='input'   name="c_name" type="text" key={props.listItem.c_id} id={props.listItem.c_id} value={listName} onChange={onChangeList}/>
               <InputGroup.Append>
                 <Button variant="outline-success" size="sm" type="button" onClick={onSubmitEditList}><span>&#10004;</span></Button>
-                <Button variant="outline-danger" size="sm"type="button"><span>&#10008;</span></Button>
+                <Button variant="outline-danger" size="sm"type="button" onClick={onDeleteList}><span>&#10008;</span></Button>
               </InputGroup.Append>
             </InputGroup>
           </Form>
@@ -46,7 +53,9 @@ function ListItems (props) {
       <div>
         {props.listItems.map(listItem => <ListItem listItem={listItem} key={listItem.c_id}
                                             onSubmitEditListItem={props.onSubmitEditListItem} 
-                                            updateListItems={props.updateListItems}/>)}
+                                            updateListItems={props.updateListItems}
+                                            onDeleteListItem={props.onDeleteListItem}
+                                            deleteList={props.deleteList}/>)}
       </div>
     );
   }

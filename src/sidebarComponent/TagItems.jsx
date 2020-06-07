@@ -14,24 +14,32 @@ function TagItem(props){
     }
 
     function onClickEditTagName(updatedTag){
-
       var data = { 
         g_id:props.tagItem.g_id,
         g_name: tagName
       }
-
       props.onSubmitEditTag(data);
       props.updateTag(data);
     }
 
+    function onDeleteTag(deletedTag){
+      var data ={
+        g_id:props.tagItem.g_id,
+        g_name:tagName
+      }
+      props.onDeleteTagItem(data);
+      props.deleteTag(data);
+    }
+
+
     return (
         
-            <Form className="mx-3 my-1">
+            <Form className="mx-3 my-1" >
             <InputGroup>
-              <Form.Control as='input' name="c_name" type="text" key={props.tagItem.g_id} defaultValue={props.tagItem.g_name} onChange={onChangeTagName}/>
+              <Form.Control as='input' name="c_name" type="text" key={props.tagItem.g_id} id={props.tagItem.g_id} defaultValue={props.tagItem.g_name} onChange={onChangeTagName}/>
               <InputGroup.Append>
                 <Button variant="outline-success"size="sm" type="button" key={props.tagItem.g_id} onClick={onClickEditTagName}><span>&#10004;</span></Button>
-                <Button variant="outline-danger"size="sm" type="button"><span>&#10008;</span></Button>
+                <Button variant="outline-danger"size="sm" type="button" onClick={onDeleteTag}><span>&#10008;</span></Button>
               </InputGroup.Append>
             </InputGroup>
           </Form>
@@ -46,7 +54,9 @@ function TagItems(props){
         <div>
             {props.tagItems.map(tagItem => <TagItem tagItem = {tagItem} 
                                                     onSubmitEditTag={props.onSubmitEditTag} 
-                                                    updateTag={props.updateTag}/>)}
+                                                    updateTag={props.updateTag}
+                                                    onDeleteTagItem={props.onDeleteTagItem}
+                                                    deleteTag={props.deleteTag}/>)}
         </div>
     );
 }

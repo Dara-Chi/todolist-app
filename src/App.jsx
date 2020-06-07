@@ -41,13 +41,17 @@ function App () {
     fetchData();
   }, []);
 
-  // function addTask (newTask) {
-  //   setDateItems([...dateItems, newTask]);
-  // }
-
   function updateTask (updatedTask) {
     setDateItems(dateItems.map(task => task.t_id === updatedTask.t_id ? updatedTask : task));
-    window.location.reload(true);
+    
+  }
+  
+  function addTask (newTask) {
+    setDateItems([...dateItems, newTask]);
+  }
+
+  function deleteTask (deleteTask) {
+    setDateItems(dateItems.filter(task => task.t_id !== deleteTask.t_id));
   }
  
   //fetch list items from database
@@ -69,9 +73,8 @@ function App () {
 
   //append new list item to old list items. 
   async function addListItem(newListItem){
-    
     console.log('creating new list item', newListItem);
-    let res = await axios.post( 'http://localhost:8080/createList', {c_name: newListItem})
+    let res = await axios.post( 'http://localhost:8080/createList',  {c_name: newListItem})
     .then((response) => {
       setListItems([...listItems, response.data]);
       console.log(response.data);
@@ -80,8 +83,33 @@ function App () {
     });
   }
 
+  async function onSubmitEditListItem(editedList){
+    console.log('edited list: ', editedList);
+    var c_id = editedList.c_id;
+    try {
+      const res = await axios.put('http://localhost:8080/updateList/'+ c_id, editedList);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function onDeleteListItem(listItemDeleted){
+    console.log('delete?', listItemDeleted);
+    try{
+      let res = await axios.delete('http://localhost:8080/deleteList/' + listItemDeleted.c_id);
+      console.log(res.data);
+    } catch(error){
+      console.log(error);
+    }
+  }
+
   function updateListItems(updatedList){
     setListItems(listItems.map(listItem => listItem.c_id === updatedList.c_id ?updatedList:listItem));
+  }
+
+  function deleteList(deletedList){
+    setListItems(listItems.filter(listItem => listItem.c_id !== deletedList.c_id));
   }
   const [tags, setTags] = useState([" "]);
   useEffect(() => {
@@ -110,15 +138,28 @@ function App () {
     });
   }
 
+  async function onDeleteTagItem(deletedTag){
+    console.log('creating new tag item', deletedTag);
+    try{
+      let res = await axios.delete('http://localhost:8080/DeleteTag/'+ deletedTag.g_id);
+      console.log(res.data);
+    } catch(error){
+      console.log(error);
+    }
+  }
+
   function updateTag(updatedTag){
     setTags(tags.map(tagItem => tagItem.g_id===updatedTag.g_id? updatedTag:tagItem));
   }
 
+  function deleteTag(deletedTag){
+    setTags(tags.filter(tag => tag.g_id !== deletedTag.g_id));
+  }
+
   async function onSubmitEditTag(editedTag){
     console.log('edited tag: ', editedTag);
-    var g_id = editedTag.g_id;
     try {
-      const res = await axios.put('http://localhost:8080/UpdateTag/'+ g_id, editedTag);
+      const res = await axios.put('http://localhost:8080/UpdateTag/'+ editedTag.g_id, editedTag);
       console.log(res.data);
     } catch (error) {
       console.log(error);
@@ -195,32 +236,10 @@ function App () {
     }
   }
 
-/*
-    return axios.put('http://localhost:8080/tasks' + editedTask.t_id, editedTask).then((res) => {
-      console.log(res.data);
-    }).catch (error => {
-      console.log(error);
-    })
-    */
-  
-
-  async function onSubmitEditListItem(editedList){
-
-    console.log('edited list: ', editedList);
-    var c_id = editedList.c_id;
-    try {
-      const res = await axios.put('http://localhost:8080/updateList/'+ c_id, editedList);
-      console.log(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-
-  }
-
   async function onClickDeleteTask(deletedTask){
     console.log('deleted task: ', deletedTask);
     try{
-      const res = await axios.put('http://localhost:8080/deleteTasks/'+ deletedTask.t_id, deletedTask);
+      const res = await axios.put('http://localhost:8080/deleteTasks/'+ deletedTask.t_id);
       console.log(res.data);
     }catch(err){
       console.log(err);
@@ -234,12 +253,13 @@ function App () {
       main = 
       <>
         <SortButton filters={filters} filterStatus={filterStatus} setStatus={setStatus} />
-        <TaskItemList tasks={dateItems.filter(filterTasksByDay).filter(filterTaskByStatus)} updateTask={updateTask} 
-                      listItems={listItems} tagItems={tags} onSubmitEdit={onSubmitEdit} onClickDeleteTask={onClickDeleteTask}/>          
+        <TaskItemList tasks={dateItems.filter(filterTasksByDay).filter(filterTaskByStatus)} updateTask={updateTask} deleteTask={deleteTask} 
+                      listItems={listItems} tagItems={tags} onSubmitEdit={onSubmitEdit} onClickDeleteTask={onClickDeleteTask} 
+                      />          
       </>
       break;
     case 'create':
-      main = <CreateTask createTaskPost={createTaskPost} updateTask={updateTask}listItems={listItems} tagItems={tags}/>
+      main = <CreateTask createTaskPost={createTaskPost} addTask={addTask}listItems={listItems} tagItems={tags}/>
       break;
     case 'export':
       main = <ExportList />
@@ -286,7 +306,8 @@ function App () {
           <AddListName addListItem={addListItem} />
           <div className="listSection">
             <ListItems listItems={listItems} updateListItems={updateListItems} 
-                        onSubmitEditListItem={onSubmitEditListItem}/>
+                        onSubmitEditListItem={onSubmitEditListItem} onDeleteListItem={onDeleteListItem}
+                        deleteList={deleteList}/>
           </div>
           
         </div>
@@ -294,9 +315,10 @@ function App () {
         {/* tag section */}
         <div className="tag">
           <Tag />
-          <AddTagName addTagItem={addTagItem}/>
+          <AddTagName addTagItem={addTagItem} />
           <div className="tagSection">
-            <TagItems tagItems={tags}  updateTag={updateTag} onSubmitEditTag={onSubmitEditTag} />
+            <TagItems tagItems={tags}  updateTag={updateTag} onSubmitEditTag={onSubmitEditTag}
+                      onDeleteTagItem={onDeleteTagItem} deleteTag={deleteTag} />
           </div>
           
         </div>

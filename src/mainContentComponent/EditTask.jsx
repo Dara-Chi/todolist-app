@@ -49,10 +49,10 @@ function EditTask(props){
         }
         props.onSubmitEdit(data);
         props.updateTask(data);
-    
+        window.location.reload(true);
     }
     return (
-        <Form className="my-1 col-8 border border-success rounded text-left" key={props.task.t_id} onSubmit={onSubmitEditTask} updateTask={props.updateTask}>
+        <Form className="my-1 col-8 border border-success rounded text-left" onSubmit={onSubmitEditTask}>
         <Form.Group as={Row} controlId="t_name" className="mt-2">
             <Form.Label column sm={3} >
             Task Name
