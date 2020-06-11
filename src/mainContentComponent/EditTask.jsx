@@ -15,11 +15,8 @@ function EditTask(props){
     
     const [selectedStartDate, setStartDate]= useState(new Date(props.task.t_start_date));
     const [selectedDueDate, setDueDate] = useState(new Date(props.task.t_due_date));
-
-   
     const [selectedPriority, setSelectPriority] = useState(props.task.t_priority);
     const [selecedStatus, setStatus] = useState(props.task.t_status);
-    
     const[name, setName] = useState(props.task.t_name);
     function onChangeName(e){
         var t_name = e.target.value;
@@ -49,7 +46,6 @@ function EditTask(props){
         }
         props.onSubmitEdit(data);
         props.updateTask(data);
-        window.location.reload(true);
     }
     return (
         <Form className="my-1 col-8 border border-success rounded text-left" onSubmit={onSubmitEditTask}>

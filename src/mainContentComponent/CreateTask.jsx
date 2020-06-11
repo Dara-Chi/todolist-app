@@ -3,11 +3,12 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import DatePicker from "react-datepicker";
+import DatePicker,{addDays} from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Button from "react-bootstrap/Button";
 import { useState } from 'react';
 import moment from 'moment';
+import {add, format} from 'date-fns';
 
 
 
@@ -15,8 +16,8 @@ function CreateTask(props) {
    
     const [selectedStartDate, setStartDate]=useState(new Date());
     const [selectedDueDate, setDueDate]= useState(selectedStartDate);
-    
     const[showRecurringInputs, setRecurringInputs]=useState(false);
+    
     function showRecurringTask(){
         var recurring = setRecurringInputs(!showRecurringInputs);
         return recurring;
@@ -66,7 +67,7 @@ function CreateTask(props) {
         </Col>
     </Form.Group>
     <Form.Group as={Row}  controlId="t_status">
-        <Form.Label column sm={3} for>
+        <Form.Label column sm={3}>
         Status
         </Form.Label>
         <Col sm={9}>
@@ -84,7 +85,6 @@ function CreateTask(props) {
         </Form.Label>
         <Col Col={9}>
             <DatePicker 
-               
                 name="t_start_date" 
                 selected={selectedStartDate}
                 onChange={date => setStartDate(date)} 
@@ -93,7 +93,6 @@ function CreateTask(props) {
         </Col>
         </Form.Group>
         <Form.Group as={Row} controlId="t_due_date" >
-
         <Form.Label column sm={3} >
         Due Date
         </Form.Label>
@@ -123,18 +122,14 @@ function CreateTask(props) {
         <Col sm={9}>
         <Form.Control as="select" name="t_group" custom  ref={tag => task.t_group = tag}>
             {props.tagItems.map(i => <option key={i.g_id} value ={i.g_id}>{i.g_name}</option>)}
-        
         </Form.Control>
         </Col>
     </Form.Group>
 
-    <Form.Group as={Row} controlId="tc_recurring">
+    <Form.Group as={Row} controlId="tc_recurreg">
         <Col sm={{ span: 6, offset: 3 }}>
             <Form.Check type="checkbox" label="Is it a recurring task?" name="tc_recurring" onChange={()=>showRecurringTask()}/>
-
         </Col>
-       
-       
     </Form.Group>
     {showRecurringInputs && 
     <>
@@ -155,23 +150,19 @@ function CreateTask(props) {
             <Form.Control as="input" rows="3"  ref={times => task.tc_times = times} placeholder="Give a number here..." />  
             </Col> 
         </Form.Group>
-           
         </>}
-   
     <Form.Group as={Row}  controlId="t_description">
                 <Form.Label column sm={3}>Task Description</Form.Label>
                 <Col sm={9}>
                 <Form.Control as="textarea" rows="3" name="t_description" ref={desc => task.t_description = desc} placeholder="Add your description here..." />  
                 </Col> 
             </Form.Group>
-    
     <Form.Group as={Row}>
         <Col sm={{ span: 10, offset: 2 }}>
         <Button variant="success"type="submit" className="float-right">save</Button>
         </Col>
     </Form.Group>
 </Form> 
-    
   );
 }
 

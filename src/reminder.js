@@ -9,15 +9,15 @@ class User{
 }
 
 var taskResult = null;
-getTasks(function(result){
-
+getTasks(sendEmail);
+  
+function sendEmail (result) {
     taskResult = result;
     var newuser = new User("Ron", "shehanthelis.r@gmail.com");
     var bodyTxt = createBody(taskResult, newuser.Name);
     
     sendEMail(bodyTxt, newuser.Email);   
-    
-});
+}
 
 /**
  * Function to get task list
@@ -41,7 +41,7 @@ function getTasks(callback){
     con.connect(function (err) {
         if (err) throw err;
         //var sqlTsk = "SELECT * FROM task WHERE t_active = 1 AND t_due_date = ?";
-        var sqlTsk = "SELECT * FROM task WHERE t_active = 1";
+        var sqlTsk = "SELECT t_name FROM task WHERE t_active = 1 AND t_due_date = ?";
 
         //run query to get values from task table
         con.query(sqlTsk, [date], function (err, result) {

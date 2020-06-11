@@ -17,6 +17,8 @@ import AddListName from './sidebarComponent/AddListName';
 import TaskItemList from "./mainContentComponent/TaskItemList";
 import ListItems from "./sidebarComponent/ListItems";
 import FiveDays from"./sidebarComponent/FiveDays";
+import TasksFound from "./mainContentComponent/TasksFound";
+// import TaskItemsFound from "./mainContentComponent/TaskItemsFound";
 
 function App () {
 
@@ -212,7 +214,6 @@ function App () {
 
   
   async function createTaskPost(newTask){
-
     console.log('creating new task item', newTask);
     let res = await axios.post( 'http://localhost:8080/CreateTask', newTask)
     .then((response) => {
@@ -224,9 +225,18 @@ function App () {
 
   }
 
+  async function exportListPost(listExported){
+    console.log('request body: ', listExported);
+    let res = await axios.post('http://localhost:8080/sendList',listExported)
+    .then((response)=>{
+      console.log("This is res: ",response.data);
+    }, (error)=>{
+      console.log(error);
+    });
+  }
+
  
   async function onSubmitEdit(editedTask){
-    console.log('edited task: ', editedTask);
     var t_id = editedTask.t_id;
     try {
       const res = await axios.put('http://localhost:8080/tasks/'+ t_id, editedTask);
@@ -237,7 +247,6 @@ function App () {
   }
 
   async function onClickDeleteTask(deletedTask){
-    console.log('deleted task: ', deletedTask);
     try{
       const res = await axios.put('http://localhost:8080/deleteTasks/'+ deletedTask.t_id);
       console.log(res.data);
@@ -262,18 +271,29 @@ function App () {
       main = <CreateTask createTaskPost={createTaskPost} addTask={addTask}listItems={listItems} tagItems={tags}/>
       break;
     case 'export':
-      main = <ExportList />
+      main = <ExportList listItems={listItems} exportListPost={exportListPost}/>
       break;
     case 'search':
       main = <></>
       break;
+    case 'simpleSearch':
+      main =  <TasksFound tasks={dateItems} listItems={listItems} tagItems={tags}
+                          onSubmitEdit={onSubmitEdit} onClickDeleteTask={onClickDeleteTask} deleteTask={deleteTask} updateTask={updateTask} />
+      break;
   }
 
   function checkToStartTaskOnSameDay (task) {
-    console.log(task);
     if (task.t_status !== 1) return false; // not "to start"
   }
 
+  async function onSearchSubmit(searchedItem){
+    try {
+      const res = await axios.put('http://localhost:8080/tasks/SearchName/'+ searchedItem.t_name);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <>
       {/* nav bar element in header */}
@@ -284,20 +304,16 @@ function App () {
           <Nav className="ml-auto ">
             <Menu setPage={setPage}  />
           </Nav>  
-          <SimpleSearch />
+          <SimpleSearch onSearchSubmit={onSearchSubmit} setPage={setPage}   />
         </Navbar.Collapse>
       </Navbar>
-
       {/* sidebar elements. */}
       <div className="sidebar border-right border-success pr-2">
-
         {/* upcoming task section  */}
         <div className="upcoming">
-        {/* setPage={setPage}  */}
           <UpcomingTask />
           <FiveDays fiveDays={fiveDays} setCurrentDay={setCurrentDay} />
         </div>
-
         {/* list section */}
         <div className="list">
           {/* below add a new list item into the existing list array */}
@@ -309,9 +325,7 @@ function App () {
                         onSubmitEditListItem={onSubmitEditListItem} onDeleteListItem={onDeleteListItem}
                         deleteList={deleteList}/>
           </div>
-          
         </div>
-
         {/* tag section */}
         <div className="tag">
           <Tag />

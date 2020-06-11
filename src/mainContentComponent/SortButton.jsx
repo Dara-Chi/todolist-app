@@ -4,8 +4,6 @@ import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 
 
-
-
 function SortButton(props) {
   return (
     <Row>
@@ -17,6 +15,5 @@ function SortButton(props) {
     
   );
 }
-
 
 export default SortButton;
