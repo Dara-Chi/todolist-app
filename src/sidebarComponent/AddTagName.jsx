@@ -12,13 +12,13 @@ function AddTagName(props){
    
 
     return (
-        <Form className="mx-2 " onSubmit={()=> props.addTagItem(newTagName)}>
-            <Form.Group controlId="g_name" className="my-1">
+        <Form className="mx-3 " onSubmit={()=> props.addTagItem(newTagName)}>
+            <InputGroup controlId="g_name">
                 <InputGroup.Append>
                 <Form.Control name="g_name" type="text" placeholder="new tag name..." onChange={onChangeTagName} />
                 <Button variant="success" size="sm" className="ml-1" type="submit">add</Button>
                 </InputGroup.Append>
-            </Form.Group>
+            </InputGroup>
         </Form>
             
         );

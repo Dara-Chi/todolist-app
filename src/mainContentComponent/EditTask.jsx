@@ -15,11 +15,8 @@ function EditTask(props){
     
     const [selectedStartDate, setStartDate]= useState(new Date(props.task.t_start_date));
     const [selectedDueDate, setDueDate] = useState(new Date(props.task.t_due_date));
-
-   
     const [selectedPriority, setSelectPriority] = useState(props.task.t_priority);
     const [selecedStatus, setStatus] = useState(props.task.t_status);
-    
     const[name, setName] = useState(props.task.t_name);
     function onChangeName(e){
         var t_name = e.target.value;
@@ -45,13 +42,13 @@ function EditTask(props){
             t_due_date: moment(selectedDueDate).format('YYYY-MM-DD'),
             t_category: task.t_category.value,
             t_group: task.t_group.value,
-            t_description: description,
+            t_description: description
         }
         props.onSubmitEdit(data);
-    
+        props.updateTask(data);
     }
     return (
-        <Form className="my-1 col-8 border border-success rounded text-left" key={props.task.t_id} onSubmit={onSubmitEditTask}>
+        <Form className="my-1 col-8 border border-success rounded text-left" onSubmit={onSubmitEditTask}>
         <Form.Group as={Row} controlId="t_name" className="mt-2">
             <Form.Label column sm={3} >
             Task Name
@@ -66,9 +63,9 @@ function EditTask(props){
             </Form.Label>
             <Col sm={9}>
             <Form.Control as="select" name="t_priority" defaultValue={selectedPriority} ref={priority => task.t_priority = priority} custom>
-                <option value="1">Low</option>
+                <option value="3">Low</option>
                 <option value="2">Medium</option>
-                <option value="3">High</option>
+                <option value="1">High</option>
             </Form.Control>
             </Col>
            
