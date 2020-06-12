@@ -8,23 +8,25 @@ import "react-datepicker/dist/react-datepicker.css";
 import Button from "react-bootstrap/Button";
 import { useState } from 'react';
 import moment from 'moment';
-import {add, format} from 'date-fns';
-
-
 
 function CreateTask(props) {
    
     const [selectedStartDate, setStartDate]=useState(new Date());
     const [selectedDueDate, setDueDate]= useState(selectedStartDate);
-    const[showRecurringInputs, setRecurringInputs]=useState(false);
+    const [showRecurringInputs, setRecurringInputs]=useState(false);
+    const [requireRepeatedTimes, setRepeatedTimes]=useState(false);
     
+  
+
     function showRecurringTask(){
         var recurring = setRecurringInputs(!showRecurringInputs);
+        setRepeatedTimes(true);
         return recurring;
     }
 
     const task = {};
     function onSubmitCreateTask (e) {
+        e.preventDefault();
         var data = {
             t_name: task.t_name.value,
             t_priority: task.t_priority.value,
@@ -33,8 +35,8 @@ function CreateTask(props) {
             t_due_date: moment(selectedDueDate).format('YYYY-MM-DD'),
             t_category: task.t_category.value,
             t_group: task.t_group.value,
-            tc_recurring: showRecurringInputs,
-            tc_frequency: task.tc_frequency ? task.tc_frequency.value : null,
+            tc_recurring: showRecurringInputs? 1: 0,
+            tc_frequency: task.tc_frequency ? task.tc_frequency.value : 'daily',
             tc_times: task.tc_times ? task.tc_times.value : 1,
             t_description: task.t_description.value,
         }
@@ -50,7 +52,7 @@ function CreateTask(props) {
         Task Name
         </Form.Label>
         <Col sm={9} >
-            <Form.Control as='input' name="t_name" type="text" ref={name => task.t_name = name} placeholder="Give a task name..." />
+            <Form.Control required as='input' name="t_name" type="text" ref={name => task.t_name = name} placeholder="Give a task name..." />
         </Col>
     </Form.Group>
     <Form.Group as={Row}  controlId="t_priority">
@@ -110,7 +112,8 @@ function CreateTask(props) {
         List/Category
         </Form.Label>
         <Col sm={9}>
-            <Form.Control as="select" name="t_category" ref={list => task.t_category = list}   custom>
+            <Form.Control placeholder="Please add a list"as="select" name="t_category" ref={list => task.t_category = list} custom required>
+                <option value="" >Select one--</option>
                 {props.listItems.map(i => <option key={i.c_id} value ={i.c_id} >{i.c_name}</option>)}
             </Form.Control>
         </Col>
@@ -120,8 +123,9 @@ function CreateTask(props) {
         Tag/Group
         </Form.Label>
         <Col sm={9}>
-        <Form.Control as="select" name="t_group" custom  ref={tag => task.t_group = tag}>
-            {props.tagItems.map(i => <option key={i.g_id} value ={i.g_id}>{i.g_name}</option>)}
+        <Form.Control as="select" name="t_group" custom  ref={tag => task.t_group = tag} required>
+            <option value="" >Select one--</option>
+            {props.tagItems.map(i => <option key={i.g_id} value ={i.g_id} >{i.g_name}</option>)}
         </Form.Control>
         </Col>
     </Form.Group>
@@ -136,8 +140,9 @@ function CreateTask(props) {
         <Form.Group as={Row}  controlId="tc_frequency"  >
             <Form.Label column sm={3}>Frequency</Form.Label>
             <Col sm={9}>
-            <Form.Control as="select" name="tc_frequency" ref={frequency => task.tc_frequency = frequency} custom>
-                <option value="daily">Daily</option>
+            <Form.Control as="select" name="tc_frequency" ref={tc_frequency => task.tc_frequency = tc_frequency} custom required>
+                <option value="" >Select one--</option>
+                <option value="daily" >Daily</option>
                 <option value="weekly">Weekly</option>
                 <option value="fortnightly">Fortnightly</option>
                 <option value="monthly">Monthly</option>
@@ -147,7 +152,7 @@ function CreateTask(props) {
         <Form.Group as={Row}  controlId="tc_times">
             <Form.Label column sm={3}>repeated times</Form.Label>
             <Col sm={9}>
-            <Form.Control as="input" rows="3"  ref={times => task.tc_times = times} placeholder="Give a number here..." />  
+            <Form.Control id="times" as="input" rows="3"  ref={times => task.tc_times = times} required={requireRepeatedTimes}required/>  
             </Col> 
         </Form.Group>
         </>}
