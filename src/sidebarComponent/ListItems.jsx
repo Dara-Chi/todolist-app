@@ -38,7 +38,7 @@ function ListItem(props){
     return (
           <Form className="mx-3 my-1">
             <InputGroup>
-              <Form.Control as='input'   name="c_name" type="text" key={props.listItem.c_id} id={props.listItem.c_id} value={listName} onChange={onChangeList}/>
+              <Form.Control as='input'   name="c_name" type="text" key={props.listItem.c_id}  value={listName} onChange={onChangeList}/>
               <InputGroup.Append>
                 <Button variant="outline-success" size="sm" type="button" onClick={onSubmitEditList}><span>&#10004;</span></Button>
                 <Button variant="outline-danger" size="sm"type="button" onClick={onDeleteList}><span>&#10008;</span></Button>
@@ -51,7 +51,7 @@ function ListItem(props){
 function ListItems (props) {
     return (
       <div>
-        {props.listItems.map(listItem => <ListItem listItem={listItem} key={listItem.c_id}
+        {props.listItems.map(listItem => <ListItem listItem={listItem} key={listItem.toString()}
                                             onSubmitEditListItem={props.onSubmitEditListItem} 
                                             updateListItems={props.updateListItems}
                                             onDeleteListItem={props.onDeleteListItem}

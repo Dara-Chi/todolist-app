@@ -9,7 +9,7 @@ function SortButton(props) {
     <Row>
       <div className="col-2"></div>
       <ButtonGroup className="sortBtn my-5 col-8">
-        {props.filters.map((filterStatus) => <Button variant="success" key={props.filters.value} className="border border-dark" onClick={()=> props.setStatus(filterStatus.value)}>{filterStatus.title}</Button>)}
+        {props.filters.map(filter => <Button variant="success" key={filter.value} className="border border-dark" onClick={()=> props.setStatus(filter)}>{filter.title}</Button>)}
       </ButtonGroup>
     </Row>
     

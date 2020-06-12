@@ -180,9 +180,11 @@ function App () {
       day.setDate(day.getDate() + i);
       return day;
     });
+    
   }
 
   function dayListing () {
+    console.log(getDays(5));
     return getDays(5);
   }
  
@@ -261,7 +263,7 @@ function App () {
     default:
       main = 
       <>
-        <SortButton filters={filters} filterStatus={filterStatus} setStatus={setStatus} />
+        <SortButton filters={filters} setStatus={setStatus} />
         <TaskItemList tasks={dateItems.filter(filterTasksByDay).filter(filterTaskByStatus)} updateTask={updateTask} deleteTask={deleteTask} 
                       listItems={listItems} tagItems={tags} onSubmitEdit={onSubmitEdit} onClickDeleteTask={onClickDeleteTask} 
                       />          
@@ -321,7 +323,7 @@ function App () {
           {/* below is the add btn for a new list */}
           <AddListName addListItem={addListItem} />
           <div className="listSection">
-            <ListItems listItems={listItems} updateListItems={updateListItems} 
+            <ListItems listItems={listItems} updateListItems={updateListItems}
                         onSubmitEditListItem={onSubmitEditListItem} onDeleteListItem={onDeleteListItem}
                         deleteList={deleteList}/>
           </div>
