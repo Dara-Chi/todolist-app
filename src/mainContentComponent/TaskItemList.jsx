@@ -10,7 +10,6 @@ function TaskItem (props) {
   const[showEditComponent, setEditComponent]=useState(false);
   function clickEdit(){
     setEditComponent(!showEditComponent);
-
   }
   function onClickDelete(e){
     var data = {
@@ -19,6 +18,8 @@ function TaskItem (props) {
   props.onClickDeleteTask(data);
   props.deleteTask(data);
   }
+
+
   return (
     <>
       <div className="col-2"></div>
@@ -46,8 +47,8 @@ function TaskItem (props) {
 }
 function TaskItemList (props) {
   return (
-    <div>
-      {props.tasks.map(task => <TaskItem key={task.t_id} task={task} listItems={props.listItems} tagItems={props.tagItems} updateTask={props.updateTask} 
+    <div className="mainSection">
+      {props.tasks.map(task => <TaskItem  key={task.t_id} task={task} listItems={props.listItems} tagItems={props.tagItems} updateTask={props.updateTask} 
                                          onSubmitEdit={props.onSubmitEdit} onClickDeleteTask={props.onClickDeleteTask} deleteTask={props.deleteTask}
                                          />)}
     </div>

@@ -18,25 +18,28 @@ import TaskItemList from "./mainContentComponent/TaskItemList";
 import ListItems from "./sidebarComponent/ListItems";
 import FiveDays from"./sidebarComponent/FiveDays";
 import TasksFound from "./mainContentComponent/TasksFound";
-// import TaskItemsFound from "./mainContentComponent/TaskItemsFound";
+import getDay from './utils/get-day';
 
 function App () {
-
-
   //updating date component if data is updated/inserted new/deleted
   //fetch data when the component mounts.Providing an empty array as second argument... 
   //to the effect hook to avoid activating it on component updates but only for the mounting of the component.
-  const [dateItems, setDateItems] = useState([]);
+  const [dateItems, _setDateItems] = useState([]);
+
+  function setDateItems (...args) {
+    console.log('setting date items to:', args);
+    _setDateItems(...args);
+  }
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios(
         'http://localhost:8080/tasks', 
       );
-
       if (result.fatal) {
         alert('request failed. please restart the server');
         return;
       }
+      console.log(result.data);
       setDateItems(result.data);
     };
  
@@ -45,11 +48,7 @@ function App () {
 
   function updateTask (updatedTask) {
     setDateItems(dateItems.map(task => task.t_id === updatedTask.t_id ? updatedTask : task));
-    
-  }
-  
-  function addTask (newTask) {
-    setDateItems([...dateItems, newTask]);
+    document.getElementById('editBtn').innerHTML= 'Saved';
   }
 
   function deleteTask (deleteTask) {
@@ -76,7 +75,7 @@ function App () {
   //append new list item to old list items. 
   async function addListItem(newListItem){
     console.log('creating new list item', newListItem);
-    let res = await axios.post( 'http://localhost:8080/createList',  {c_name: newListItem})
+    let res = await axios.post( 'http://localhost:8080/createList',  newListItem)
     .then((response) => {
       setListItems([...listItems, response.data]);
       console.log(response.data);
@@ -131,7 +130,7 @@ function App () {
   //append new tag item to old list items. 
   async function addTagItem(newTagItem){
     console.log('creating new list item', newTagItem);
-    let res = await axios.post( 'http://localhost:8080/CreateTag', {g_name: newTagItem})
+    let res = await axios.post( 'http://localhost:8080/CreateTag', newTagItem)
     .then((response) => {
       setTags([...tags, response.data]);
       console.log(response.data);
@@ -168,10 +167,6 @@ function App () {
     }
   }
 
-  function getDay (date) {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  }
-
   //get how many "count" days.
   function getDays (count) {
     const today = new Date();
@@ -180,7 +175,6 @@ function App () {
       day.setDate(day.getDate() + i);
       return day;
     });
-    
   }
 
   function dayListing () {
@@ -190,7 +184,6 @@ function App () {
  
   //set five days for Upcoming task
   const [fiveDays, setFiveDays] = useState(dayListing());
-
   const [currentDay, setCurrentDay] = useState(fiveDays[0]);
   function filterTasksByDay (task) {
     const taskDueDate = getDay(new Date(task.t_due_date)); // time
@@ -202,29 +195,25 @@ function App () {
     { value: 0, title: 'All' },
     { value: 1, title: 'To Start' },
     { value: 2, title: 'Ongoing' },
-    { value: 3, title: 'Done' },
-    { value: 4, title: 'Overdue' }
-
+    { value: 3, title: 'Done' }
   ];
   const [filterStatus, setStatus] = useState(0);
-  
   function filterTaskByStatus (task){
     if (filterStatus === 0) return true;
     const taskStatus = task.t_status;
     return taskStatus === filterStatus;
   }
 
-  
   async function createTaskPost(newTask){
     console.log('creating new task item', newTask);
     let res = await axios.post( 'http://localhost:8080/CreateTask', newTask)
     .then((response) => {
       setListItems([...listItems, response.data]);
-      console.log(response.data);
+      document.getElementById("createSaveBtn").innerHTML = 'Saved';
+      setTimeout(window.location.reload(),5000);
     }, (error) => {
       console.log(error);
     });
-
   }
 
   async function exportListPost(listExported){
@@ -237,12 +226,10 @@ function App () {
     });
   }
 
- 
   async function onSubmitEdit(editedTask){
     var t_id = editedTask.t_id;
     try {
       const res = await axios.put('http://localhost:8080/tasks/'+ t_id, editedTask);
-      console.log(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -251,11 +238,39 @@ function App () {
   async function onClickDeleteTask(deletedTask){
     try{
       const res = await axios.put('http://localhost:8080/deleteTasks/'+ deletedTask.t_id);
-      console.log(res.data);
     }catch(err){
       console.log(err);
     }
   }
+// find task matching serach name;
+  const[foundTasks, setFoundTask]=useState([]);
+  async function onSearchSubmit(searchedItem){
+    console.log('search for:', searchedItem);
+    try {
+      const res = await axios.put('http://localhost:8080/tasks/SearchName/'+ searchedItem.t_name);
+      setFoundTask(res.data);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  //get overdue tasks 
+  const [overDueTasks, setOverDueTasks] = useState([]);
+  useEffect( ()=> {
+    const fecthOverDueTask = async() =>{
+      const result = await axios(
+        'http://localhost:8080/OverDue', 
+      );
+      if (result.fatal) {
+        alert('request failed. please restart the server');
+        return;
+      }
+      console.log(result.data);
+      setOverDueTasks(result.data);
+    } 
+    fecthOverDueTask();
+  },[]);
+
   //set the state for different component shown in main section.
   const [page, setPage] = useState('');
   let main;
@@ -263,14 +278,15 @@ function App () {
     default:
       main = 
       <>
-        <SortButton filters={filters} setStatus={setStatus} />
-        <TaskItemList tasks={dateItems.filter(filterTasksByDay).filter(filterTaskByStatus)} updateTask={updateTask} deleteTask={deleteTask} 
-                      listItems={listItems} tagItems={tags} onSubmitEdit={onSubmitEdit} onClickDeleteTask={onClickDeleteTask} 
-                      />          
+        <SortButton filters={filters} filterStatus={filterStatus} setStatus={setStatus} />
+        <TaskItemList tasks={dateItems.filter(filterTasksByDay).filter(filterTaskByStatus)} 
+                      updateTask={updateTask} deleteTask={deleteTask} 
+                      listItems={listItems} tagItems={tags} onSubmitEdit={onSubmitEdit} 
+                      onClickDeleteTask={onClickDeleteTask}/>          
       </>
       break;
     case 'create':
-      main = <CreateTask createTaskPost={createTaskPost} addTask={addTask}listItems={listItems} tagItems={tags}/>
+      main = <CreateTask createTaskPost={createTaskPost} listItems={listItems} tagItems={tags}/>
       break;
     case 'export':
       main = <ExportList listItems={listItems} exportListPost={exportListPost}/>
@@ -279,23 +295,16 @@ function App () {
       main = <></>
       break;
     case 'simpleSearch':
-      main =  <TasksFound tasks={dateItems} listItems={listItems} tagItems={tags}
-                          onSubmitEdit={onSubmitEdit} onClickDeleteTask={onClickDeleteTask} deleteTask={deleteTask} updateTask={updateTask} />
+      main =  <TasksFound tasks={foundTasks} listItems={listItems} tagItems={tags}
+                          onSubmitEdit={onSubmitEdit} onClickDeleteTask={onClickDeleteTask} 
+                          deleteTask={deleteTask} updateTask={updateTask} />
       break;
+    case 'overdue':
+      main = <TasksFound tasks={overDueTasks} listItems={listItems} tagItems={tags}
+              onSubmitEdit={onSubmitEdit} onClickDeleteTask={onClickDeleteTask} deleteTask={deleteTask} updateTask={updateTask} />
+      break;  
   }
 
-  function checkToStartTaskOnSameDay (task) {
-    if (task.t_status !== 1) return false; // not "to start"
-  }
-
-  async function onSearchSubmit(searchedItem){
-    try {
-      const res = await axios.put('http://localhost:8080/tasks/SearchName/'+ searchedItem.t_name);
-      console.log(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
   return (
     <>
       {/* nav bar element in header */}
@@ -303,7 +312,7 @@ function App () {
         <CurrentDate />
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ml-auto ">
+          <Nav className="mr-auto">
             <Menu setPage={setPage}  />
           </Nav>  
           <SimpleSearch onSearchSubmit={onSearchSubmit} setPage={setPage}   />
@@ -314,7 +323,7 @@ function App () {
         {/* upcoming task section  */}
         <div className="upcoming">
           <UpcomingTask />
-          <FiveDays fiveDays={fiveDays} setCurrentDay={setCurrentDay} />
+          <FiveDays fiveDays={fiveDays} setPage={setPage} overDueTasks={overDueTasks} currentDay={currentDay} setCurrentDay={setCurrentDay} tasks={dateItems}/>
         </div>
         {/* list section */}
         <div className="list">
@@ -323,7 +332,7 @@ function App () {
           {/* below is the add btn for a new list */}
           <AddListName addListItem={addListItem} />
           <div className="listSection">
-            <ListItems listItems={listItems} updateListItems={updateListItems}
+            <ListItems items={listItems} updateListItems={updateListItems}
                         onSubmitEditListItem={onSubmitEditListItem} onDeleteListItem={onDeleteListItem}
                         deleteList={deleteList}/>
           </div>
@@ -343,7 +352,10 @@ function App () {
       {/* main section element */}
       <div className="main float-center">
         {/* check the 'main' variable status in javascript */}
+       
         { main }
+       
+        
       </div>
     </>
   );

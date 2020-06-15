@@ -6,22 +6,20 @@ import { useState } from 'react';
 
 function SimpleSearch(props) {
 
-  const search ={};
+  const search = {};
   const [searchName, setSearchName] =useState(" ");
+
   function onSearch(e){
       e.preventDefault();
-      var searchName = e.target.value;
-      setSearchName(searchName);
+      var searchName = search.t_name.value.trim();
       props.setPage("simpleSearch");
       var data = {
-        t_name:search.t_name.value
+        t_name: searchName
       }
-      console.log(searchName);
       props.onSearchSubmit(data);
   }
 
   function onChangeSearch(e){
-    e.preventDefault();
     var newSearch = e.target.value;
     setSearchName(newSearch);
   }
@@ -30,7 +28,7 @@ function SimpleSearch(props) {
       <Form inline onSubmit={onSearch} >
         <Form.Group controlId="t_name" >
           <Form.Label srOnly ></Form.Label>
-          <FormControl as='input' ref={name => search.t_name = name} name="t_name" type="text" placeholder="Search by name..." className="mr-sm-2" value={searchName} onChange={onChangeSearch}/>
+          <FormControl as='input' ref={name => search.t_name = name} name="t_name" type="text" placeholder="Search by name..." className="mr-sm-2" onChange={onChangeSearch}/>
           <Button variant="success" type="submit" >Search</Button>
         </Form.Group>
       </Form>

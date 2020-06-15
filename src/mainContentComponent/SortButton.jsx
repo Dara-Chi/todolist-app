@@ -5,12 +5,17 @@ import Row from 'react-bootstrap/Row';
 
 
 function SortButton(props) {
+  function isSelectedFilter (filter) {
+    return filter.value === props.filterStatus ? 'active' : '';
+  }
+
   return (
-    <Row>
-      <div className="col-2"></div>
-      <ButtonGroup className="sortBtn my-5 col-8">
-        {props.filters.map(filter => <Button variant="success" key={filter.value} className="border border-dark" onClick={()=> props.setStatus(filter)}>{filter.title}</Button>)}
+    <Row >
+      <div className="col-1"></div>
+      <ButtonGroup className="my-5 col-10 ">
+        {props.filters.map(filter => <Button className={isSelectedFilter(filter)} variant="outline-success" key={filter.value} filterStatus={props.filterStatus} onClick={()=> props.setStatus(filter.value)}>{filter.title}</Button>)}
       </ButtonGroup>
+      <div className="col-1"></div>
     </Row>
     
   );

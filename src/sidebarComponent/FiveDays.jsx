@@ -1,24 +1,48 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
-import moment from "moment";
-
+import getDay from '../utils/get-day';
 
 function EachDate(props){
+
+    function filterTasksByDay (task) {
+        const taskDueDate = getDay(new Date(task.t_due_date)); // time
+        return taskDueDate.valueOf() === props.eachDay.valueOf();
+    }
+
+    function onClickDate(e){
+        props.setCurrentDay(props.eachDay);
+        props.setPage('');
+    }
+
    
+    const showDot = props.tasks.filter(filterTasksByDay).some(t => t.t_status === 1);
+    const currentClass = props.eachDay === props.currentDay ? 'active' : '';
+    
     return (
         <div className="mb-1">
-            <Button id={props.eachDay}size="sm" variant="outline-success" block className="mx-1" onClick={() => props.setCurrentDay(props.eachDay)}>{props.eachDay.toLocaleDateString()}
-                <span className="float-right">&#x1F534;</span>
+            <Button tasks={props.tasks} className={currentClass} id={props.eachDay} size="sm" variant="outline-success" 
+                    block onClick={onClickDate} >{props.eachDay.toLocaleDateString()}
+                { showDot && <span className="float-right">&#x1F534;</span> }
             </Button>
         </div> 
     );
 }
 
 function FiveDays(props){
+    const showOverDue = props.overDueTasks.some(t => t.t_status ===4);
+    
+    function onGetOverdue(e){
+        e.preventDefault();
+        props.setPage("overdue");
+    }
 
     return (
         <div className="mx-3">
-            {props.fiveDays.map(eachDay=><EachDate key={eachDay.toString()}eachDay={eachDay} setCurrentDay={props.setCurrentDay}/>)}
+            {showOverDue && <Button type="button" className="mb-1 mx-0 float-left " block
+                                            size="sm" variant="danger" onClick={onGetOverdue}>OVER DUE</Button>}
+            {props.fiveDays.map(eachDay=><EachDate key={eachDay.toString()} setPage={props.setPage}eachDay={eachDay} overDueTasks={props.overDueTasks}
+                                                    currentDay={props.currentDay} setCurrentDay={props.setCurrentDay} 
+                                                    tasks={props.tasks}/>)}
         </div>
     );
 }

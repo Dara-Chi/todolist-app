@@ -1,13 +1,21 @@
 import React from "react";
-import Navlink from 'react-bootstrap/Navlink';
+import Nav from 'react-bootstrap/Nav';
 
 function Menu(props) {
   return (
     <>
-      <Navlink className="mx-4" href="#" onClick={() => props.setPage('tasks')} >Home</Navlink>
-      <Navlink className="mx-4"  href="#" onClick={() => props.setPage('create')} >Creating Task</Navlink>
-      <Navlink className="mx-4"  href="#" onClick={() => props.setPage('export')} >Exporting List</Navlink>
-      <Navlink className="mx-4"  href="#" onClick={() => props.setPage('search')}>Complex Search</Navlink>
+      <Nav.Item className="mx-2">
+        <Nav.Link active href="" onClick={() => props.setPage('')}>Home</Nav.Link>
+      </Nav.Item>
+      <Nav.Item className="mx-2">
+        <Nav.Link  href=""onClick={() => props.setPage('create')} >Creating Task</Nav.Link>
+      </Nav.Item>
+      <Nav.Item className="mx-2">
+        <Nav.Link href=""onClick={() => props.setPage('export')} >Exporting List</Nav.Link>
+      </Nav.Item>
+      <Nav.Item className="mx-2">
+        <Nav.Link href="" onClick={() => props.setPage('search')}>Complex Search</Nav.Link>
+      </Nav.Item>
     </>
   );
 }

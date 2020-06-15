@@ -11,7 +11,6 @@ function TaskFound (props) {
     const[showEditComponent, setEditComponent]=useState(false);
     function clickEdit(){
         setEditComponent(!showEditComponent);
-
     }
     function onClickDelete(e){
         var data = {
@@ -23,8 +22,8 @@ function TaskFound (props) {
         
     return (
       <>
-        <div className="col-2 "></div>
-        <ButtonGroup className="col-8 px-0" key={props.task.t_id}>
+        <div className="col-2"></div>
+        <ButtonGroup className="col-8 px-0">
           <Button className="col-11" variant="outline-success" onClick={clickEdit} >
             <Row>
               <Col sm={5} className="text-left">{props.task.t_name}</Col>
@@ -42,20 +41,22 @@ function TaskFound (props) {
         <div className="my-1 col-2"></div>
         {showEditComponent && <EditTask key={props.task.t_id} task={props.task} 
                                         listItems={props.listItems} tagItems={props.tagItems}
-                                        updateTask={props.updateTask} 
-                                        onSubmitEdit={props.onSubmitEdit}/>}
+                                        deleteTask={props.deleteTask}
+                                        onClickDeleteTask={props.onClickDeleteTask}
+                                        onSubmitEdit={props.onSubmitEdit}
+                                        updateTask={props.updateTask} />}
        </Row>
       </>
     );
   }
   
   function TasksFound (props) {
-    console.log('tasks:', props.tasks);
-    console.log('map?', props.tasks.map);
+   
     return (
-      <div className="mt-5">
-        {props.tasks.map(task => <TaskFound key={task.t_id} task={task} updateTask={props.updateTask} listItems={props.listItems} tagItems={props.tagItems}
-                                           onSubmitEdit={props.onSubmitEdit} onClickDeleteTask={props.onClickDeleteTask} deleteTask={props.deleteTask}
+      <div className="mt-5 mainSection">
+        {props.tasks.map(task => <TaskFound key={task.t_id} task={task} updateTask={props.updateTask} 
+                                            listItems={props.listItems} tagItems={props.tagItems}
+                                            onSubmitEdit={props.onSubmitEdit} onClickDeleteTask={props.onClickDeleteTask} deleteTask={props.deleteTask}
                                            />)}
       </div>
     );
