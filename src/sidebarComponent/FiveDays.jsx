@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import getDay from '../utils/get-day';
+import moment from 'moment';
 
 function EachDate(props){
 
@@ -12,6 +13,7 @@ function EachDate(props){
     function onClickDate(e){
         props.setCurrentDay(props.eachDay);
         props.setPage('');
+       
     }
 
    
@@ -19,9 +21,9 @@ function EachDate(props){
     const currentClass = props.eachDay === props.currentDay ? 'active' : '';
     
     return (
-        <div className="mb-1">
+        <div className="mb-1 ">
             <Button tasks={props.tasks} className={currentClass} id={props.eachDay} size="sm" variant="outline-success" 
-                    block onClick={onClickDate} >{props.eachDay.toLocaleDateString()}
+                    block onClick={onClickDate} >{moment(props.eachDay).format('YYYY-MM-DD')}
                 { showDot && <span className="float-right">&#x1F534;</span> }
             </Button>
         </div> 
@@ -34,6 +36,7 @@ function FiveDays(props){
     function onGetOverdue(e){
         e.preventDefault();
         props.setPage("overdue");
+        
     }
 
     return (

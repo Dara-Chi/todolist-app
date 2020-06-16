@@ -7,12 +7,15 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Button from "react-bootstrap/Button";
 import FormGroup from "react-bootstrap/FormGroup";
-import { useState } from 'react';
+import {useState } from 'react';
 
 function EditTask(props){
     
     const [selectedStartDate, setStartDate]= useState(new Date(props.task.t_start_date));
     const [selectedDueDate, setDueDate] = useState(new Date(props.task.t_due_date));
+    console.log('task?', props.task);
+    console.log({ selectedStartDate, selectedDueDate });
+    
     const [selectedPriority, setSelectPriority] = useState(props.task.t_priority);
     const [selecedStatus, setStatus] = useState(props.task.t_status);
     const[name, setName] = useState(props.task.t_name);
@@ -78,7 +81,7 @@ function EditTask(props){
            
         </Form.Group>
         <Form.Group as={Row}  controlId="t_status">
-            <Form.Label column sm={3} for>
+            <Form.Label column sm={3}>
             Status
             </Form.Label>
             <Col sm={9}>

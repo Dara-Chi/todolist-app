@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -115,7 +114,7 @@ function CreateTask(props) {
         <Col sm={9}>
             <Form.Control placeholder="Please add a list"as="select" name="t_category" ref={list => task.t_category = list} custom required>
                 <option value="" >Select one--</option>
-                {props.listItems.map(i => <option key={i.c_id} value ={i.c_id} >{i.c_name}</option>)}
+                {props.listItems.map(i => <option key={i.c_id}  value ={i.c_id}>{i.c_name}</option>)}
             </Form.Control>
         </Col>
     </Form.Group>
@@ -126,7 +125,7 @@ function CreateTask(props) {
         <Col sm={9}>
         <Form.Control as="select" name="t_group" custom  ref={tag => task.t_group = tag} required>
             <option value="">Select one--</option>
-            {props.tagItems.map(i => <option key={i.g_id} value ={i.g_id} >{i.g_name}</option>)}
+            {props.tagItems.map(i => <option key={i.g_id} value={i.g_id} >{i.g_name}</option>)}
         </Form.Control>
         </Col>
     </Form.Group>

@@ -2,26 +2,23 @@ import React from "react";
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-import { useState } from 'react';
 
 function SimpleSearch(props) {
 
   const search = {};
-  const [searchName, setSearchName] =useState(" ");
-
   function onSearch(e){
       e.preventDefault();
-      var searchName = search.t_name.value.trim();
       props.setPage("simpleSearch");
+      props.setSearchName(search.t_name.value.trim()); 
       var data = {
-        t_name: searchName
+        t_name: props.searchName
       }
       props.onSearchSubmit(data);
   }
 
   function onChangeSearch(e){
     var newSearch = e.target.value;
-    setSearchName(newSearch);
+    props.setSearchName(newSearch);
   }
   return (
     <>

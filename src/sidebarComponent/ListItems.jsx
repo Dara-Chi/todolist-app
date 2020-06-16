@@ -51,7 +51,7 @@ function ListItem(props){
 function ListItems (props) {
     return (
       <div>
-        {props.items.map(listItem => <ListItem item={listItem} key={listItem.toString()}
+        {props.listItems.map(listItem => <ListItem item={listItem} key={listItem.toString()}
                                             onSubmitEditListItem={props.onSubmitEditListItem} 
                                             updateListItems={props.updateListItems}
                                             onDeleteListItem={props.onDeleteListItem}

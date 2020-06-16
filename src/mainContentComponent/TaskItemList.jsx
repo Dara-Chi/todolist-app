@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import EditTask from './EditTask';
+import moment from 'moment';
 
 function TaskItem (props) {
   //if use click on the task btn, then show the edit component visible or vice versa.
@@ -12,11 +13,13 @@ function TaskItem (props) {
     setEditComponent(!showEditComponent);
   }
   function onClickDelete(e){
+    e.preventDefault();
     var data = {
       t_id:props.task.t_id,
     }
   props.onClickDeleteTask(data);
   props.deleteTask(data);
+  
   }
 
 
@@ -27,7 +30,7 @@ function TaskItem (props) {
           <Button className="col-11" variant="outline-success" onClick={clickEdit} >
             <Row>
               <Col sm={5} className="text-left">{props.task.t_name}</Col>
-              <Col sm={3} className="text-center">{new Date(props.task.t_due_date).toLocaleDateString()}</Col>
+              <Col sm={3} className="text-center">{moment(props.task.t_due_date).format('YYYY-MM-DD')}</Col>
               <Col sm={3} className="text-right">{props.task.t_priority}</Col>
             </Row>
           </Button>
@@ -47,9 +50,13 @@ function TaskItem (props) {
 }
 function TaskItemList (props) {
   return (
-    <div className="mainSection">
-      {props.tasks.map(task => <TaskItem  key={task.t_id} task={task} listItems={props.listItems} tagItems={props.tagItems} updateTask={props.updateTask} 
-                                         onSubmitEdit={props.onSubmitEdit} onClickDeleteTask={props.onClickDeleteTask} deleteTask={props.deleteTask}
+    
+    <div className="mainSection my-5">
+      {props.tasks.map(task => <TaskItem  key={task.t_id} task={task} listItems={props.listItems} 
+                                          tagItems={props.tagItems} updateTask={props.updateTask} 
+                                          onSubmitEdit={props.onSubmitEdit} 
+                                          onClickDeleteTask={props.onClickDeleteTask} 
+                                          deleteTask={props.deleteTask}
                                          />)}
     </div>
   );

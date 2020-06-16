@@ -73,15 +73,14 @@ function App () {
   },[]);
 
   //append new list item to old list items. 
-  async function addListItem(newListItem){
-    console.log('creating new list item', newListItem);
-    let res = await axios.post( 'http://localhost:8080/createList',  newListItem)
-    .then((response) => {
-      setListItems([...listItems, response.data]);
-      console.log(response.data);
-    }, (error) => {
+  async function addListItem(newListItem) {
+    try {
+      console.log('creating new list item', newListItem);
+      const res = await axios.post( 'http://localhost:8080/createList',  newListItem)
+      setListItems([...listItems, res.data]);
+    } catch (error) {
       console.log(error);
-    });
+    }
   }
 
   async function onSubmitEditListItem(editedList){
@@ -238,22 +237,12 @@ function App () {
   async function onClickDeleteTask(deletedTask){
     try{
       const res = await axios.put('http://localhost:8080/deleteTasks/'+ deletedTask.t_id);
+      window.location.reload();
     }catch(err){
       console.log(err);
     }
   }
-// find task matching serach name;
-  const[foundTasks, setFoundTask]=useState([]);
-  async function onSearchSubmit(searchedItem){
-    console.log('search for:', searchedItem);
-    try {
-      const res = await axios.put('http://localhost:8080/tasks/SearchName/'+ searchedItem.t_name);
-      setFoundTask(res.data);
-      console.log(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+
   //get overdue tasks 
   const [overDueTasks, setOverDueTasks] = useState([]);
   useEffect( ()=> {
@@ -271,8 +260,23 @@ function App () {
     fecthOverDueTask();
   },[]);
 
+  const [searchName, setSearchName] =useState("");
+  // find task matching serach name;
+  const[foundTasks, setFoundTask]=useState([]);
+  async function onSearchSubmit(searchedItem){
+    console.log('search for:', searchedItem);
+    try {
+      const res = await axios.put('http://localhost:8080/tasks/SearchName/'+ searchName);
+      setFoundTask([...foundTasks, ...res.data]);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   //set the state for different component shown in main section.
   const [page, setPage] = useState('');
+
   let main;
   switch (page) {
     default:
@@ -295,16 +299,23 @@ function App () {
       main = <></>
       break;
     case 'simpleSearch':
-      main =  <TasksFound tasks={foundTasks} listItems={listItems} tagItems={tags}
-                          onSubmitEdit={onSubmitEdit} onClickDeleteTask={onClickDeleteTask} 
-                          deleteTask={deleteTask} updateTask={updateTask} />
+      main = 
+     
+             <TaskItemList tasks={foundTasks} updateTask={updateTask} deleteTask={deleteTask} 
+                            listItems={listItems} tagItems={tags} onSubmitEdit={onSubmitEdit} 
+                            onClickDeleteTask={onClickDeleteTask}/>  
+   
+     
       break;
     case 'overdue':
-      main = <TasksFound tasks={overDueTasks} listItems={listItems} tagItems={tags}
-              onSubmitEdit={onSubmitEdit} onClickDeleteTask={onClickDeleteTask} deleteTask={deleteTask} updateTask={updateTask} />
+      main = <TaskItemList tasks={overDueTasks} updateTask={updateTask} deleteTask={deleteTask} 
+                            listItems={listItems} tagItems={tags} onSubmitEdit={onSubmitEdit} 
+                            onClickDeleteTask={onClickDeleteTask}/>
+
       break;  
   }
 
+  
   return (
     <>
       {/* nav bar element in header */}
@@ -315,7 +326,7 @@ function App () {
           <Nav className="mr-auto">
             <Menu setPage={setPage}  />
           </Nav>  
-          <SimpleSearch onSearchSubmit={onSearchSubmit} setPage={setPage}   />
+          <SimpleSearch onSearchSubmit={onSearchSubmit} setPage={setPage} searchName={searchName} setSearchName={setSearchName} />
         </Navbar.Collapse>
       </Navbar>
       {/* sidebar elements. */}
@@ -332,7 +343,7 @@ function App () {
           {/* below is the add btn for a new list */}
           <AddListName addListItem={addListItem} />
           <div className="listSection">
-            <ListItems items={listItems} updateListItems={updateListItems}
+            <ListItems listItems={listItems} updateListItems={updateListItems}
                         onSubmitEditListItem={onSubmitEditListItem} onDeleteListItem={onDeleteListItem}
                         deleteList={deleteList}/>
           </div>
