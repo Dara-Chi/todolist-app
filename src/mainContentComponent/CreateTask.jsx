@@ -28,12 +28,13 @@ function CreateTask(props) {
         e.preventDefault();
         var data = {
             t_name: task.t_name.value,
-            t_priority: task.t_priority.value,
-            t_status: task.t_status.value,
+            t_priority: Number(task.t_priority.value),
+            t_category: task.t_category.value,
+            t_status: Number(task.t_status.value),
             t_start_date: moment(selectedStartDate).format('YYYY-MM-DD'),
             t_due_date: moment(selectedDueDate).format('YYYY-MM-DD'),
-            t_category: task.t_category.value,
-            t_group: task.t_group.value,
+            t_category: Number(task.t_category.value),
+            t_group: Number(task.t_group.value),
             tc_recurring: showRecurringInputs? 1: 0,
             tc_frequency: task.tc_frequency ? task.tc_frequency.value : 'daily',
             tc_times: task.tc_times ? task.tc_times.value : 1,

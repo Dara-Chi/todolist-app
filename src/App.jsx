@@ -49,12 +49,35 @@ function App () {
   function updateTask (updatedTask) {
     setDateItems(dateItems.map(task => task.t_id === updatedTask.t_id ? updatedTask : task));
     document.getElementById('editBtn').innerHTML= 'Saved';
+    // window.location.reload();
+  }
+
+  function updateFoundTask(foundTask){
+    setFoundTask(foundTasks.map(task => task.t_id === foundTask.t_id ? foundTask : task));
+    setDateItems(dateItems.map(task => task.t_id === foundTask.t_id ? foundTask : task));
+    document.getElementById('editBtn').innerHTML= 'Saved';
+  }
+  function updateOverdueTask(overdueTask){
+    setOverDueTasks(overDueTasks.map(task => task.t_id === overdueTask.t_id ? overdueTask : task));
+    setDateItems(dateItems.map(task => task.t_id === overdueTask.t_id ? overdueTask : task));
+    setOverDueTasks(overDueTasks.filter(task => task.t_id !== overdueTask.t_id));
+    document.getElementById('editBtn').innerHTML= 'Saved';
+    window.location.reload();
   }
 
   function deleteTask (deleteTask) {
     setDateItems(dateItems.filter(task => task.t_id !== deleteTask.t_id));
   }
+
+  function deleteFoundTask(deletefoundTask){
+    setFoundTask(foundTasks.filter(foundTask => foundTask.t_id !== deletefoundTask.t_id));
+    setDateItems(dateItems.filter(task => task.t_id !== deletefoundTask.t_id));
+  }
  
+  function deleteOverdueTask(deletedOverdueTask){
+    setOverDueTasks(overDueTasks.filter(overdueTask => overdueTask.t_id !== deletedOverdueTask.t_id));
+    setDateItems(dateItems.filter(task => task.t_id !== deletedOverdueTask.t_id));
+  }
   //fetch list items from database
   // set Item array [] state; orgingal state for your reference. 
   const [listItems, setListItems] = useState([" "]);
@@ -110,6 +133,7 @@ function App () {
 
   function deleteList(deletedList){
     setListItems(listItems.filter(listItem => listItem.c_id !== deletedList.c_id));
+    setFoundTask(TasksFound.filter(TasksFound => TasksFound.c_id !== deletedList.c_id));
   }
   const [tags, setTags] = useState([" "]);
   useEffect(() => {
@@ -233,16 +257,14 @@ function App () {
       console.log(error);
     }
   }
-
   async function onClickDeleteTask(deletedTask){
     try{
       const res = await axios.put('http://localhost:8080/deleteTasks/'+ deletedTask.t_id);
-      window.location.reload();
+      // window.location.reload();
     }catch(err){
       console.log(err);
     }
   }
-
   //get overdue tasks 
   const [overDueTasks, setOverDueTasks] = useState([]);
   useEffect( ()=> {
@@ -261,18 +283,22 @@ function App () {
   },[]);
 
   const [searchName, setSearchName] =useState("");
-  // find task matching serach name;
   const[foundTasks, setFoundTask]=useState([]);
+
+// find task matching serach name;
+  
   async function onSearchSubmit(searchedItem){
-    console.log('search for:', searchedItem);
+    
     try {
       const res = await axios.put('http://localhost:8080/tasks/SearchName/'+ searchName);
-      setFoundTask([...foundTasks, ...res.data]);
+      setFoundTask(res.data);
       console.log(res.data);
     } catch (error) {
       console.log(error);
     }
   }
+
+
 
   //set the state for different component shown in main section.
   const [page, setPage] = useState('');
@@ -283,6 +309,7 @@ function App () {
       main = 
       <>
         <SortButton filters={filters} filterStatus={filterStatus} setStatus={setStatus} />
+        <p className="subtitles">your daily tasks are ...</p>
         <TaskItemList tasks={dateItems.filter(filterTasksByDay).filter(filterTaskByStatus)} 
                       updateTask={updateTask} deleteTask={deleteTask} 
                       listItems={listItems} tagItems={tags} onSubmitEdit={onSubmitEdit} 
@@ -293,25 +320,31 @@ function App () {
       main = <CreateTask createTaskPost={createTaskPost} listItems={listItems} tagItems={tags}/>
       break;
     case 'export':
-      main = <ExportList listItems={listItems} exportListPost={exportListPost}/>
+      main = <ExportList listItems={listItems} exportListPost={exportListPost} setPage={setPage}/>
       break;
     case 'search':
       main = <></>
       break;
     case 'simpleSearch':
       main = 
-     
-             <TaskItemList tasks={foundTasks} updateTask={updateTask} deleteTask={deleteTask} 
-                            listItems={listItems} tagItems={tags} onSubmitEdit={onSubmitEdit} 
-                            onClickDeleteTask={onClickDeleteTask}/>  
-   
-     
+      <>
+        <SortButton filters={filters} filterStatus={filterStatus} setStatus={setStatus} /> 
+        <p className="subtitles">Found tasks for name: <span> {searchName}</span></p>   
+        <TaskItemList tasks={foundTasks.filter(filterTaskByStatus)} 
+                      listItems={listItems} tagItems={tags} 
+                      updateTask={updateFoundTask } deleteTask={deleteFoundTask} 
+                      onSubmitEdit={onSubmitEdit} 
+                      onClickDeleteTask={onClickDeleteTask}/> 
+      </> 
       break;
     case 'overdue':
-      main = <TaskItemList tasks={overDueTasks} updateTask={updateTask} deleteTask={deleteTask} 
-                            listItems={listItems} tagItems={tags} onSubmitEdit={onSubmitEdit} 
-                            onClickDeleteTask={onClickDeleteTask}/>
-
+      main = 
+      <>
+        <p className="subtitles">Here are the overdue task...</p>
+        <TaskItemList tasks={overDueTasks} updateTask={updateOverdueTask} deleteTask={deleteOverdueTask} 
+                              listItems={listItems} tagItems={tags} onSubmitEdit={onSubmitEdit} 
+                              onClickDeleteTask={onClickDeleteTask}/>
+      </>
       break;  
   }
 
@@ -320,7 +353,7 @@ function App () {
     <>
       {/* nav bar element in header */}
       <Navbar bg="dark" variant="dark" expand="lg" className="head">
-        <CurrentDate />
+        <CurrentDate/>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">

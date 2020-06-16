@@ -1,13 +1,9 @@
 import React from 'react';
-import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import "react-datepicker/dist/react-datepicker.css";
 import Button from "react-bootstrap/Button";
-import { useState } from 'react';
-
-
 
 function ExportList(props) {
   var exportTemplate = {}
@@ -21,8 +17,14 @@ function ExportList(props) {
       message: exportTemplate.message.value
     }
     props.exportListPost(data);
-}
+    document.getElementById('exportBtn').innerHTML= 'Sent';
 
+  }
+
+  function cancelBtnClick(e){
+    props.setPage('');
+    window.location.reload();
+  }
 
   return (
       <Form className="my-1 col-md-8 border border-success rounded text-left mx-auto mt-5" onSubmit={onSubmitExportList}>
@@ -62,8 +64,8 @@ function ExportList(props) {
       </Form.Group>
       <Form.Group as={Row} >
             <Col className="float-right">
-            <Button variant="success"type="button" className="float-right mx-0">cancel</Button>
-            <Button variant="success"type="submit" className="float-right mr-2">export</Button>
+            <Button variant="success"type="button" className="float-right mx-0" onClick={cancelBtnClick}>cancel</Button>
+            <Button id="exportBtn" variant="success"type="submit" className="float-right mr-2">export</Button>
             </Col>
         </Form.Group>
      

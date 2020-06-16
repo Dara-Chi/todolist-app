@@ -4,7 +4,7 @@ import getDay from '../utils/get-day';
 import moment from 'moment';
 
 function EachDate(props){
-
+    
     function filterTasksByDay (task) {
         const taskDueDate = getDay(new Date(task.t_due_date)); // time
         return taskDueDate.valueOf() === props.eachDay.valueOf();
@@ -16,7 +16,6 @@ function EachDate(props){
        
     }
 
-   
     const showDot = props.tasks.filter(filterTasksByDay).some(t => t.t_status === 1);
     const currentClass = props.eachDay === props.currentDay ? 'active' : '';
     
@@ -36,7 +35,6 @@ function FiveDays(props){
     function onGetOverdue(e){
         e.preventDefault();
         props.setPage("overdue");
-        
     }
 
     return (

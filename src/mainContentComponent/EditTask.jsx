@@ -13,44 +13,40 @@ function EditTask(props){
     
     const [selectedStartDate, setStartDate]= useState(new Date(props.task.t_start_date));
     const [selectedDueDate, setDueDate] = useState(new Date(props.task.t_due_date));
-    console.log('task?', props.task);
-    console.log({ selectedStartDate, selectedDueDate });
-    
     const [selectedPriority, setSelectPriority] = useState(props.task.t_priority);
     const [selecedStatus, setStatus] = useState(props.task.t_status);
     const[name, setName] = useState(props.task.t_name);
+    
     function onChangeName(e){
         var t_name = e.target.value;
         setName(t_name);
     }
 
     const[description, setDescription]=useState(props.task.t_description);
-    
+
     function onChangeDescription(e){
         var t_description = e.target.value;
         setDescription(t_description);
     }
-
-   
 
     const task = {};
     function onSubmitEditTask (e) {
         e.preventDefault();
         if(selectedStartDate<=selectedDueDate){
             var data = {
-                t_id:props.task.t_id,
+                t_id: Number(props.task.t_id),
                 t_name: name,
-                t_priority: task.t_priority.value,
-                t_status: task.t_status.value,
+                t_priority: Number(task.t_priority.value),
+                t_status: Number(task.t_status.value),
                 t_start_date: moment(selectedStartDate).format('YYYY-MM-DD'),
                 t_due_date: moment(selectedDueDate).format('YYYY-MM-DD'),
-                t_category: task.t_category.value,
-                t_group: task.t_group.value,
+                t_category: Number(task.t_category.value),
+                t_group: Number(task.t_group.value),
                 t_description: description
             }
             props.onSubmitEdit(data);
             props.updateTask(data);
-            window.location.reload();
+            
         } else {
             window.alert(" 'Due Date' must be after 'Start Date' ");
         }

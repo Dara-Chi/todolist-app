@@ -9,7 +9,7 @@ function SimpleSearch(props) {
   function onSearch(e){
       e.preventDefault();
       props.setPage("simpleSearch");
-      props.setSearchName(search.t_name.value.trim()); 
+      props.setSearchName(search.t_name.value); 
       var data = {
         t_name: props.searchName
       }

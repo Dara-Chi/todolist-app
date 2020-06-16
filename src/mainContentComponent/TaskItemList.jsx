@@ -19,10 +19,8 @@ function TaskItem (props) {
     }
   props.onClickDeleteTask(data);
   props.deleteTask(data);
-  
   }
-
-
+  
   return (
     <>
       <div className="col-2"></div>
@@ -31,7 +29,7 @@ function TaskItem (props) {
             <Row>
               <Col sm={5} className="text-left">{props.task.t_name}</Col>
               <Col sm={3} className="text-center">{moment(props.task.t_due_date).format('YYYY-MM-DD')}</Col>
-              <Col sm={3} className="text-right">{props.task.t_priority}</Col>
+              <Col sm={3} className="text-right">Priority: {props.task.t_priority}</Col>
             </Row>
           </Button>
           <Button variant="success" className="col-1" onClick={onClickDelete}>
