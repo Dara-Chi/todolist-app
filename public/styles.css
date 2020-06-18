@@ -38,7 +38,6 @@ body,
 /* sidebar style */
 .sidebar {
   height:100%;
-  
   grid-area: sidebar;
   display: grid;
   grid-template-areas:
@@ -61,20 +60,35 @@ body,
 }
 
 .listSection{
-  max-height: 200px;
+  max-height: 150px;
   overflow: auto;
 }
 
 .tagSection{
 
-  max-height: 200px;
+  max-height: 150px;
   overflow: auto;
 
 }
 /* main content style */
 .main {
   grid-area: main;
- 
+}
+
+.mainSection {
+  max-height: 500px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.subtitles{
+
+  color: darkgreen;
+  font-size: 20px;
+  font-family: monospace;
+  float: center;
+  margin-top: 50px;
+  
 }
 
 .form {

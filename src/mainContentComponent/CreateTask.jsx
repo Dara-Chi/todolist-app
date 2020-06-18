@@ -1,9 +1,8 @@
 import React from 'react';
-
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import DatePicker,{addDays} from "react-datepicker";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Button from "react-bootstrap/Button";
 import { useState } from 'react';
@@ -29,20 +28,20 @@ function CreateTask(props) {
         e.preventDefault();
         var data = {
             t_name: task.t_name.value,
-            t_priority: task.t_priority.value,
-            t_status: task.t_status.value,
+            t_priority: Number(task.t_priority.value),
+            t_category: task.t_category.value,
+            t_status: Number(task.t_status.value),
             t_start_date: moment(selectedStartDate).format('YYYY-MM-DD'),
             t_due_date: moment(selectedDueDate).format('YYYY-MM-DD'),
-            t_category: task.t_category.value,
-            t_group: task.t_group.value,
+            t_category: Number(task.t_category.value),
+            t_group: Number(task.t_group.value),
             tc_recurring: showRecurringInputs? 1: 0,
             tc_frequency: task.tc_frequency ? task.tc_frequency.value : 'daily',
             tc_times: task.tc_times ? task.tc_times.value : 1,
             t_description: task.t_description.value,
         }
         props.createTaskPost(data);
-        props.addTask(data);
-     
+        
     }
 
     return (
@@ -61,7 +60,8 @@ function CreateTask(props) {
         </Form.Label>
         <Col sm={9}>
             {/* find the object match the value === props t_td */}
-            <Form.Control as="select" name="t_priority" ref={priority => task.t_priority = priority} custom>
+            <Form.Control as="select" name="t_priority" ref={priority => task.t_priority = priority} custom required> 
+                <option value="" >Select one--</option>
                 <option value="3">Low</option>
                 <option value="2">Medium</option>
                 <option value="1">High</option>
@@ -73,7 +73,8 @@ function CreateTask(props) {
         Status
         </Form.Label>
         <Col sm={9}>
-            <Form.Control as="select" name="t_status" ref={status => task.t_status = status}  custom>
+            <Form.Control as="select" name="t_status" ref={status => task.t_status = status}  custom required>
+                <option value="" >Select one--</option>
                 <option value="1">To Start</option>
                 <option value="2">Ongoing</option>
                 <option value="3">Done</option>
@@ -114,7 +115,7 @@ function CreateTask(props) {
         <Col sm={9}>
             <Form.Control placeholder="Please add a list"as="select" name="t_category" ref={list => task.t_category = list} custom required>
                 <option value="" >Select one--</option>
-                {props.listItems.map(i => <option key={i.c_id} value ={i.c_id} >{i.c_name}</option>)}
+                {props.listItems.map(i => <option key={i.c_id}  value ={i.c_id}>{i.c_name}</option>)}
             </Form.Control>
         </Col>
     </Form.Group>
@@ -124,8 +125,8 @@ function CreateTask(props) {
         </Form.Label>
         <Col sm={9}>
         <Form.Control as="select" name="t_group" custom  ref={tag => task.t_group = tag} required>
-            <option value="" >Select one--</option>
-            {props.tagItems.map(i => <option key={i.g_id} value ={i.g_id} >{i.g_name}</option>)}
+            <option value="">Select one--</option>
+            {props.tagItems.map(i => <option key={i.g_id} value={i.g_id} >{i.g_name}</option>)}
         </Form.Control>
         </Col>
     </Form.Group>
@@ -152,7 +153,7 @@ function CreateTask(props) {
         <Form.Group as={Row}  controlId="tc_times">
             <Form.Label column sm={3}>repeated times</Form.Label>
             <Col sm={9}>
-            <Form.Control id="times" as="input" rows="3"  ref={times => task.tc_times = times} required={requireRepeatedTimes}required/>  
+            <Form.Control id="times" as="input" rows="3"  ref={times => task.tc_times = times} required={requireRepeatedTimes}/>  
             </Col> 
         </Form.Group>
         </>}
@@ -164,7 +165,7 @@ function CreateTask(props) {
             </Form.Group>
     <Form.Group as={Row}>
         <Col sm={{ span: 10, offset: 2 }}>
-        <Button variant="success"type="submit" className="float-right">save</Button>
+        <Button id="createSaveBtn"variant="success"type="submit" className="float-right">save</Button>
         </Col>
     </Form.Group>
 </Form> 
